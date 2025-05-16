@@ -1,4 +1,12 @@
 import glob
+import seaborn as sns
+import pandas as pd
+import re
+import numpy as np
+from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
+import os
+
 def list_of_files(directory):
     file_paths = []
     for path in glob.glob(os.path.join(directory, '**', '*.conllu'), recursive = True):
@@ -36,7 +44,6 @@ def process_file_to_dict(file_paths, label_mapping, label_mapping_NER):
     """
     
 
-    import re
     file_sentences = []
     for path in file_paths:
         with open(path, encoding = 'utf-8') as infile:
@@ -184,6 +191,18 @@ def augment_sent_with_pred(dict_sentences, tokenizer):
 
     return all_inputs
 
+def train_test_split_documents(file_paths, index):
+    test_file = []
+    train_files = []
+    for i, path in enumerate(file_paths):
+        if i == index:
+            test_file_name = path 
+            test_file.append(path)
+        else:
+            train_files.append(path)
+
+    return train_files, test_file, test_file_name, index
+
 def post_process(predictions, labels, augmented):
     
     """
@@ -259,12 +278,8 @@ def post_process(predictions, labels, augmented):
                 word_level.append(pred)
                 word_label.append(label)
             else: # calculate sentence-level prediction
-                print(word_level)
-                print(word_label)
                 one_pred = np.argmax(np.bincount(word_level))  ## Gets the majority vote of the subtokens
                 one_label = np.argmax(np.bincount(word_label))
-                print(one_pred)
-                print(one_label)
                 sent_preds.append(one_pred)
                 sent_labels.append(one_label)
 
@@ -283,19 +298,7 @@ def post_process(predictions, labels, augmented):
         word_level_labels.append(sent_labels)
     return word_level_preds, word_level_labels
 
-# Function to get informative label per sequence
-def get_first_non_O_label(seq, id2label, pad_val=-100):
-    for l in seq:
-        if l != pad_val:
-            label = id2label[l.item()]
-            if label != "O":
-                return label
-    return "O"  
-
-from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
-import matplotlib.pyplot as plt
-import os
-def generate_report(all_labels, all_preds, label_list, fold, output_file):
+def generate_report(all_labels, all_preds, label_list, fold, test_file_name, output_file):
     """
     Displays confusion matrix and classification report of predictions against the gold labels.
 
@@ -309,7 +312,7 @@ def generate_report(all_labels, all_preds, label_list, fold, output_file):
 
     """
 
-    report = classification_report(all_labels, all_preds)
+    report = classification_report(all_labels, all_preds, labels=label_list)
     print("Classification Report -----------------------------------------------------------")
     print(report)
 
@@ -322,8 +325,75 @@ def generate_report(all_labels, all_preds, label_list, fold, output_file):
             f.write('Classification Report all Folds\n')
             f.write('-------------------------------------------------\n')
         f.write(f"Classification Report for Fold {fold + 1}\n")
+        f.write(f"Classification Report for File: {test_file_name}\n")
         f.write(report)
         f.write("\n-------------------------------------------------\n")
+
+
+def generate_confusion_matrix(all_labels, all_preds, label_list, fold, test_file_name, output_plot_file=None, output_matrix_file=None):
+    cf_matrix = confusion_matrix(all_labels, all_preds, labels=label_list)
+
+     # Create a heatmap
+    plt.figure(figsize=(30, 24))
+    ax = sns.heatmap(cf_matrix, annot=True, fmt='d', cmap="Blues",
+                     xticklabels=label_list, yticklabels=label_list,
+                     cbar=False, annot_kws={"size":14})
+
+    plt.xticks(rotation=90, fontsize=14)
+    plt.yticks(rotation=0, fontsize=14)
+    plt.title('Confusion Matrix', fontsize=18)
+    plt.xlabel('Predicted Labels', fontsize=14)
+    plt.ylabel('True Labels', fontsize=14)
+    plt.tight_layout()
+
+    if output_plot_file:
+        plt.savefig(output_plot_file, bbox_inches='tight')
+    else:
+        plt.show()
+    plt.close()
+
+    if output_matrix_file:
+        df_cm = pd.DataFrame(cf_matrix, index=label_list, columns=label_list)
+
+        file_exists = os.path.exists(output_matrix_file)
+
+        separator = '-'*50
+        header_text = f"{separator}\nConfusion matrix for Fold {fold + 1}, Test File: {test_file_name}\n{separator}\n\n"
+
+        # Open file once
+        with open(output_matrix_file, 'a') as f:
+            if file_exists:
+                f.write("\n")  # Blank line before new fold if not first
+            f.write(header_text)
+
+            # Now append the DataFrame manually
+            df_cm.to_csv(f, index=True, header=True)
+
+            f.write('\n\n')  # Blank lines after matrix
+
+    return cf_matrix
+
+def save_confusion_matrix_long_format(cf_matrix, label_list, fold, test_file_name, output_long_matrix_file=None):
+    rows = []
+    for i, true_label in enumerate(label_list):
+        for j, pred_label in enumerate(label_list):
+            count = cf_matrix[i, j]
+            rows.append({
+                "Fold": fold + 1,
+                "Test_File": test_file_name,
+                "True_Label": true_label,
+                "Predicted_Label": pred_label,
+                "Count": count
+            })
+    
+    df_long = pd.DataFrame(rows)
+
+    # Check if file exists
+    file_exists = os.path.exists(output_long_matrix_file)
+
+    # Save
+    df_long.to_csv(output_long_matrix_file, mode='a', index=False, header=not file_exists)
+
 
 def log_fold_metrics(fold, alpha, beta, loss_srl, loss_ner, f1_srl, f1_ner, log_list=None):
     log_entry = {

@@ -1,16 +1,22 @@
 import torch
 import torch.nn as nn
+import glob
 import os
+from sklearn.preprocessing import LabelEncoder
 import json
 from evaluate import load
 import numpy as np
 from itertools import chain
+import itertools
 from transformers import AutoTokenizer
-from datasets import Dataset
-from transformers import TrainingArguments, Trainer
+from transformers import DataCollatorForTokenClassification
+from datasets import Dataset, concatenate_datasets
+from transformers import AutoModelForTokenClassification, TrainingArguments, Trainer
+import re
 import argparse
 
 import torch
+from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 from functions_MT import list_of_files, process_file_to_dict, augment_sent_with_pred, train_test_split_documents, post_process, generate_report, generate_confusion_matrix, save_confusion_matrix_long_format
@@ -20,18 +26,30 @@ from transformers import (
     PreTrainedModel, BertPreTrainedModel
 )
 from transformers.modeling_outputs import TokenClassifierOutput
+
+import datasets
 import pandas as pd
+import transformers
+
+import logging
 import torch
 import numpy as np
 from datasets import load_dataset
+from tqdm.auto import tqdm
+from tqdm import tqdm as tqdm1
+
+from accelerate import Accelerator
+from filelock import FileLock
 from transformers import set_seed
 from transformers.file_utils import is_offline_mode
+from pathlib import Path
+
+import dataclasses
 from torch.utils.data.dataloader import DataLoader
-from transformers.data.data_collator import DataCollator
+from transformers.data.data_collator import DataCollator, InputDataClass
 from torch.utils.data.distributed import DistributedSampler
 from torch.utils.data.sampler import RandomSampler
-from transformers import default_data_collator
-
+from typing import List, Union, Dict
 
 
 class TaskSpecificDataset(torch.utils.data.Dataset):
@@ -41,34 +59,25 @@ class TaskSpecificDataset(torch.utils.data.Dataset):
 
     def __len__(self):
         return len(self.data)
-    
+
     def __getitem__(self, idx):
+        idx = int(idx) 
         item = self.data[idx]
         return {
             "input_ids": torch.tensor(item["input_ids"]),
             "attention_mask": torch.tensor(item["attention_mask"]),
             "labels": torch.tensor(item[f"labels_{self.task.upper()}"]),
-            "word_ids": StrIgnoreDevice(item["word_ids"]),
-            "task_name": self.task,
+            "task_name": self.task
         }
-    
 
 class DataCollatorWithTaskName:
     def __call__(self, features):
-        task_name = features[0]["task_name"] if "task_name" in features[0] else None
-        word_ids = [f["word_ids"] for f in features] if "word_ids" in features[0] else None
-        
         batch = {
             "input_ids": torch.stack([f["input_ids"] for f in features]),
             "attention_mask": torch.stack([f["attention_mask"] for f in features]),
             "labels": torch.stack([f["labels"] for f in features]),
+            "task_name": [f["task_name"] for f in features] # keep as list of strings
         }
-        
-        if task_name is not None:
-            batch["task_name"] = task_name
-        if word_ids is not None:
-            batch["word_ids"] = word_ids
-        
         return batch
     
 
@@ -144,8 +153,6 @@ class MultitaskDataloader:
             yield next(dataloader_iter_dict[task_name])
 
 
-
-
 class BertForTokenClassificationMultitask(BertPreTrainedModel):
     def __init__(self, config, task_labels_map):
         super().__init__(config)
@@ -172,17 +179,25 @@ class BertForTokenClassificationMultitask(BertPreTrainedModel):
 
 # Step 6: Custom trainer for batch alternation
 
-
-# --- Alternating Task Loader ---
+class MultiTaskTrainer(Trainer):
+    def get_train_dataloader(self):
+        loaders = {
+            task: DataLoader(
+                dataset, batch_size=2, shuffle=True, collate_fn=self.data_collator
+            ) for task, dataset in self.train_dataset.items()
+        }
+        return AlternatingTaskLoader(loaders)
 
 class AlternatingTaskLoader:
     def __init__(self, dataloader_dict):
         self.dataloader_dict = dataloader_dict
         self.task_names = list(dataloader_dict.keys())
-        self.iters = {task: iter(dl) for task, dl in dataloader_dict.items()}
+        self.iters = {k: iter(dl) for k, dl in dataloader_dict.items()}
+        self.epoch_length = 100  # number of steps per epoch
+        self.total_epochs = num_epochs
 
     def __len__(self):
-        return sum(len(dl) for dl in self.dataloader_dict.values())
+        return self.epoch_length * self.total_epochs  # match total number of training steps
 
     def __iter__(self):
         step = 0
@@ -196,90 +211,7 @@ class AlternatingTaskLoader:
             step += 1
             yield batch
 
-
-# --- Trainer ---
-class MultitaskTrainer(Trainer):
-    def get_train_dataloader(self):
-        """
-        Return a multitask alternating task dataloader.
-        """
-        loaders = {
-            task_name: DataLoader(
-                dataset,
-                batch_size=self.args.train_batch_size,
-                shuffle=True,
-                collate_fn=self.data_collator,
-            )
-            for task_name, dataset in self.train_dataset.items()
-        }
-        return AlternatingTaskLoader(loaders)
-
-    def get_eval_dataloader(self, eval_dataset=None):
-        """
-        Return evaluation dataloader. 
-        We support evaluating one task at a time.
-        """
-        if eval_dataset is None:
-            eval_dataset = self.eval_dataset
-
-        if isinstance(eval_dataset, dict):
-            # Evaluate each task separately later
-            return {
-                task_name: DataLoader(
-                    TaskSpecificDataset(dataset, task=task_name),
-                    batch_size=self.args.eval_batch_size,
-                    collate_fn=self.data_collator,
-                )
-                for task_name, dataset in eval_dataset.items()
-            }
-
-        return DataLoader(
-            eval_dataset,
-            batch_size=self.args.eval_batch_size,
-            collate_fn=self.data_collator,
-        )
-
-    def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
-        """
-        Pass task_name properly into model during both training and evaluation.
-        """
-        task_name = inputs.pop("task_name")
-        inputs.pop("word_ids", None)
-        outputs = model(**inputs, task_name=task_name)
-        return (outputs.loss, outputs) if return_outputs else outputs.loss
-    
-    def prediction_step(self, model, inputs, prediction_loss_only, ignore_keys=None):
-        """
-        During evaluation, remove non-tensor fields from inputs ('task_name', 'word_ids')
-        """
-        inputs.pop("word_ids", None)
-        return super().prediction_step(model, inputs, prediction_loss_only, ignore_keys=ignore_keys)
-
-    def evaluate(self, eval_dataset=None, ignore_keys=None, metric_key_prefix="eval"):
-        if eval_dataset is None:
-            eval_dataset = self.eval_dataset
-
-        if isinstance(eval_dataset, dict):
-            metrics = {}
-            for task_name, dataset in eval_dataset.items():
-                print(f"Evaluating task: {task_name}")
-                dataloader = self.get_eval_dataloader(dataset)
-                eval_metrics = self.evaluation_loop(
-                    dataloader,
-                    description=f"Evaluation for {task_name}",
-                    ignore_keys=ignore_keys,
-                )
-                eval_metrics = {f"{task_name}_{k}": v for k, v in eval_metrics.metrics.items()}
-                metrics.update(eval_metrics)
-
-            self.log(metrics)
-            return metrics
-
-        else:
-            return super().evaluate(eval_dataset, ignore_keys, metric_key_prefix)
-
-
-
+    #def __iter__(self):
         #while True:
             #task = np.random.choice(self.task_names)
             #try:
@@ -292,20 +224,6 @@ class MultitaskTrainer(Trainer):
 
 from torch.utils.data import DataLoader
 from torch.nn import CrossEntropyLoss
-
-seqeval = load("seqeval")
-
-def to_str_labels(preds, labels, id2label):
-    preds_str, labels_str = [], []
-    for pred, label in zip(preds, labels):
-        p_seq, l_seq = [], []
-        for p, l in zip(pred, label):
-            if l != -100:
-                p_seq.append(id2label[p])
-                l_seq.append(id2label[l])
-        preds_str.append(p_seq)
-        labels_str.append(l_seq)
-    return preds_str, labels_str
 
 # Directory and file paths setup
 directory = '../Data/SRL_train_with_entities'
@@ -397,7 +315,7 @@ for index in docs:
         task_labels_map={"srl": len(label_mapping_SRL), "ner": len(label_mapping_NER)}
     )
     model.resize_token_embeddings(len(tokenizer)) #adjust for special token
-    trainer = MultitaskTrainer(
+    trainer = MultiTaskTrainer(
         model=model,
         args=TrainingArguments(
             output_dir="./outputs",
@@ -445,8 +363,8 @@ for index in docs:
 
     
     # Get the original sentences (test data)
-    SRL_test_dicts = [SRL_raw_dataset_test[i] for i in range(len(SRL_raw_dataset_test))]
-    NER_test_dicts = [NER_raw_dataset_test[i] for i in range(len(NER_raw_dataset_test))]
+    SRL_test_dicts = SRL_raw_dataset_test.to_list()
+    NER_test_dicts = NER_raw_dataset_test.to_list()
     
     # Post-process predictions (converting indices to labels)
     srl_word_predictions, srl_word_labels = post_process(srl_predictions, srl_labels, SRL_test_dicts)
@@ -455,6 +373,7 @@ for index in docs:
     # Get tokens for each sentence
     test_tokens = files_dict_test
     all_sents = []
+    all_lbls = []
     for dct in test_tokens:
         sent = dct['text']
         all_sents.append(sent)
@@ -479,12 +398,12 @@ for index in docs:
         outfile.write("Token\tGold\tPrediction\tTask\n")
 
         outfile.write(f"=== Fold {fold+1} Document {test_file_name} ===\n")
-        for preds, golds, tokens in zip(srl_word_predictions, srl_word_labels, all_sents):
+        for preds, golds, tokens in zip(srl_word_predictions, srl_word_labels, test_tokens):
             for pred, gold, token in zip(preds, golds, tokens):
                 pred_label = value_to_key_mapping_SRL[pred]
                 gold_label = value_to_key_mapping_SRL[gold]
                 outfile.write(f"{token}\t{gold_label}\t{pred_label}\tSRL\n")
-        for preds, golds, tokens in zip(ner_word_predictions, ner_word_labels, all_sents):
+        for preds, golds, tokens in zip(ner_word_predictions, ner_word_labels, test_tokens):
             for pred, gold, token in zip(preds, golds, tokens):
                 pred_label = value_to_key_mapping_NER[pred]
                 gold_label = value_to_key_mapping_NER[gold]
@@ -547,3 +466,5 @@ all_runs.append(run_result)
 # Save all runs
 with open(metrics_file, 'w') as f:
     json.dump(all_runs, f)
+
+
