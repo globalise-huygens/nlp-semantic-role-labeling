@@ -1,3 +1,12 @@
+import glob
+import seaborn as sns
+import pandas as pd
+import re
+import numpy as np
+from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay, precision_recall_fscore_support, accuracy_score
+import matplotlib.pyplot as plt
+import os
+
 def list_of_files(directory):
     file_paths = []
     for path in glob.glob(os.path.join(directory, '**', '*.conllu'), recursive = True):
@@ -5,7 +14,7 @@ def list_of_files(directory):
             file_paths.append(path)
     return file_paths
 
-def process_file_to_dict(file_paths, label_mapping, BIO=True):
+def process_file_to_dict(file_paths, label_mapping):
     """
     Processes a file containing tokenized sentences with corresponding argument labels and predicates.
     Converts the data into a structured list of dictionaries, where each dictionary represents a sentence
@@ -34,8 +43,6 @@ def process_file_to_dict(file_paths, label_mapping, BIO=True):
 
     """
     
-
-    import re
     file_sentences = []
     for path in file_paths:
         with open(path, encoding = 'utf-8') as infile:
@@ -59,10 +66,7 @@ def process_file_to_dict(file_paths, label_mapping, BIO=True):
 
                     #check whether label for argument is in label_mapping (train_labels), else 'O'
                     argument = line_split[6]
-                    if BIO == False:
-                        argument = re.sub(r'^[B|I]-', '', argument)
-                    else:
-                        argument = argument
+
                     #get numeric label
                     if argument in label_mapping.keys():
                         numeric_arg = label_mapping[argument]
@@ -173,6 +177,18 @@ def augment_sent_with_pred(dict_sentences, tokenizer):
 
     return all_inputs
 
+def train_test_split_documents(file_paths, index):
+    test_file = []
+    train_files = []
+    for i, path in enumerate(file_paths):
+        if i == index:
+            test_file_name = path 
+            test_file.append(path)
+        else:
+            train_files.append(path)
+
+    return train_files, test_file, test_file_name, index
+
 def post_process(predictions, labels, augmented):
     
     """
@@ -198,7 +214,7 @@ def post_process(predictions, labels, augmented):
                                                       true labels for a sentence, with each word represented by a single 
                                                       label (majority vote from subwords).
     """
-    import numpy as np
+
     word_level_preds = []  # This will store the final word-level predictions
     word_level_labels = []
     all_preds = []
@@ -268,10 +284,8 @@ def post_process(predictions, labels, augmented):
         word_level_labels.append(sent_labels)
     return word_level_preds, word_level_labels
             
-from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
-import matplotlib.pyplot as plt
-import os
-def generate_report(all_labels, all_preds, label_list, fold, output_file):
+
+def generate_report(all_labels, all_preds, label_list, fold, test_file_name, output_file):
     """
     Displays confusion matrix and classification report of predictions against the gold labels.
 
@@ -285,7 +299,7 @@ def generate_report(all_labels, all_preds, label_list, fold, output_file):
 
     """
 
-    report = classification_report(all_labels, all_preds)
+    report = classification_report(all_labels, all_preds, labels=label_list)
     print("Classification Report -----------------------------------------------------------")
     print(report)
 
@@ -298,17 +312,107 @@ def generate_report(all_labels, all_preds, label_list, fold, output_file):
             f.write('Classification Report all Folds\n')
             f.write('-------------------------------------------------\n')
         f.write(f"Classification Report for Fold {fold + 1}\n")
+        f.write(f"Classification Report for File: {test_file_name}\n")
         f.write(report)
         f.write("\n-------------------------------------------------\n")
 
 
+def generate_confusion_matrix(all_labels, all_preds, label_list, fold, test_file_name, output_plot_file=None, output_matrix_file=None):
+    cf_matrix = confusion_matrix(all_labels, all_preds, labels=label_list)
 
-# Function to get informative label per sequence
-def get_first_non_O_label(seq, id2label, pad_val=-100):
-    for l in seq:
-        if l != pad_val:
-            label = id2label[l.item()]
-            if label != "O":
-                return label
-    return "O"  
+     # Create a heatmap
+    plt.figure(figsize=(30, 24))
+    ax = sns.heatmap(cf_matrix, annot=True, fmt='d', cmap="Blues",
+                     xticklabels=label_list, yticklabels=label_list,
+                     cbar=False, annot_kws={"size":14})
+
+    plt.xticks(rotation=90, fontsize=14)
+    plt.yticks(rotation=0, fontsize=14)
+    plt.title('Confusion Matrix', fontsize=18)
+    plt.xlabel('Predicted Labels', fontsize=14)
+    plt.ylabel('True Labels', fontsize=14)
+    plt.tight_layout()
+
+    if output_plot_file:
+        plt.savefig(output_plot_file, bbox_inches='tight')
+    else:
+        plt.show()
+    plt.close()
+
+    if output_matrix_file:
+        df_cm = pd.DataFrame(cf_matrix, index=label_list, columns=label_list)
+
+        file_exists = os.path.exists(output_matrix_file)
+
+        separator = '-'*50
+        header_text = f"{separator}\nConfusion matrix for Fold {fold + 1}, Test File: {test_file_name}\n{separator}\n\n"
+
+        # Open file once
+        with open(output_matrix_file, 'a') as f:
+            if file_exists:
+                f.write("\n")  # Blank line before new fold if not first
+            f.write(header_text)
+
+            # Now append the DataFrame manually
+            df_cm.to_csv(f, index=True, header=True)
+
+            f.write('\n\n')  # Blank lines after matrix
+
+    return cf_matrix
+
+def save_confusion_matrix_long_format(cf_matrix, label_list, fold, test_file_name, output_long_matrix_file):
+    rows = []
+    for i, true_label in enumerate(label_list):
+        for j, pred_label in enumerate(label_list):
+            count = cf_matrix[i, j]
+            rows.append({
+                "Fold": fold + 1,
+                "Test_File": test_file_name,
+                "True_Label": true_label,
+                "Predicted_Label": pred_label,
+                "Count": count
+            })
+    
+    df_long = pd.DataFrame(rows)
+
+    # Check if file exists
+    file_exists = os.path.exists(output_long_matrix_file)
+
+    # Save
+    df_long.to_csv(output_long_matrix_file, mode='a', index=False, header=not file_exists)
+
+
+def compute_filtered_macro_scores(y_true, y_pred):
+    """
+    Computes macro-averaged precision, recall, and F1, ignoring labels with support=0.
+    Returns: macro scores, accuracy, and per-class metrics for included labels.
+    """
+    labels = sorted(list(set(y_true + y_pred)))
+    precision, recall, f1, support = precision_recall_fscore_support(
+        y_true, y_pred, labels=labels, zero_division=0
+    )
+
+    mask = np.array(support) > 0
+    filtered_labels = np.array(labels)[mask]
+    filtered_precision = precision[mask]
+    filtered_recall = recall[mask]
+    filtered_f1 = f1[mask]
+    filtered_support = np.array(support)[mask]
+
+    macro_precision = np.mean(filtered_precision)
+    macro_recall = np.mean(filtered_recall)
+    macro_f1 = np.mean(filtered_f1)
+    accuracy = accuracy_score(y_true, y_pred)
+
+    per_class = {
+        label: {
+            "precision": float(p),
+            "recall": float(r),
+            "f1": float(f),
+            "support": int(s)
+        }
+        for label, p, r, f, s in zip(filtered_labels, filtered_precision, filtered_recall, filtered_f1, filtered_support)
+    }
+
+    return macro_precision, macro_recall, macro_f1, accuracy, per_class
 

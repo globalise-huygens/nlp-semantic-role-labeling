@@ -3,7 +3,7 @@ import seaborn as sns
 import pandas as pd
 import re
 import numpy as np
-from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay, precision_recall_fscore_support, accuracy_score
 import matplotlib.pyplot as plt
 import os
 
@@ -413,3 +413,38 @@ def log_fold_metrics(fold, alpha, beta, loss_srl, loss_ner, f1_srl, f1_ner, log_
         log_list.append(log_entry)
     
     return log_entry
+
+def compute_filtered_macro_scores(y_true, y_pred):
+    """
+    Computes macro-averaged precision, recall, and F1, ignoring labels with support=0.
+    Returns: macro scores, accuracy, and per-class metrics for included labels.
+    """
+    labels = sorted(list(set(y_true + y_pred)))
+    precision, recall, f1, support = precision_recall_fscore_support(
+        y_true, y_pred, labels=labels, zero_division=0
+    )
+
+    mask = np.array(support) > 0
+    filtered_labels = np.array(labels)[mask]
+    filtered_precision = precision[mask]
+    filtered_recall = recall[mask]
+    filtered_f1 = f1[mask]
+    filtered_support = np.array(support)[mask]
+
+    macro_precision = np.mean(filtered_precision)
+    macro_recall = np.mean(filtered_recall)
+    macro_f1 = np.mean(filtered_f1)
+    accuracy = accuracy_score(y_true, y_pred)
+
+    per_class = {
+        label: {
+            "precision": float(p),
+            "recall": float(r),
+            "f1": float(f),
+            "support": int(s)
+        }
+        for label, p, r, f, s in zip(filtered_labels, filtered_precision, filtered_recall, filtered_f1, filtered_support)
+    }
+
+    return macro_precision, macro_recall, macro_f1, accuracy, per_class
+

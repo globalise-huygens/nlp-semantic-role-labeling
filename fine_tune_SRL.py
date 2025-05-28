@@ -1,5 +1,13 @@
 import glob
 import os
+
+base_output_dir = os.path.join(os.environ["TMPDIR"], "outputs")
+os.makedirs(base_output_dir, exist_ok=True)
+os.environ["HF_HOME"] = os.path.join(os.environ["TMPDIR"], "hf_cache")
+os.environ["TRANSFORMERS_CACHE"] = os.environ["HF_HOME"]
+os.environ["HF_DATASETS_CACHE"] = os.path.join(os.environ["TMPDIR"], "hf_datasets")
+os.environ["HF_METRICS_CACHE"] = os.environ["HF_DATASETS_CACHE"]
+
 from sklearn.preprocessing import LabelEncoder
 import json
 from evaluate import load
@@ -9,7 +17,7 @@ import itertools
 from transformers import AutoTokenizer
 from transformers import DataCollatorForTokenClassification
 from datasets import Dataset
-from transformers import AutoModelForTokenClassification, TrainingArguments, Trainer
+from transformers import AutoModelForTokenClassification, TrainingArguments, Trainer, RobertaTokenizerFast
 import re
 from statistics import Counter
 import argparse
@@ -20,22 +28,21 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import KFold
 
-from functions_SRL import process_file_to_dict, augment_sent_with_pred, post_process, generate_report, get_first_non_O_label
+from functions_SRL import process_file_to_dict, augment_sent_with_pred, train_test_split_documents, post_process, generate_report, generate_confusion_matrix, save_confusion_matrix_long_format, compute_filtered_macro_scores
 
 parser = argparse.ArgumentParser(description="Fine-tune SRL model")
 parser.add_argument('--learning_rate', type=float, help="Learning rate for training")
 parser.add_argument('--epoch', type=int, help="Number of epochs for training")
+parser.add_argument('--batch_size', type=int, help="Batch size for training")
 parser.add_argument('--model_checkpoint', type=str, help="Model checkpoint name")
-parser.add_argument('--num_folds', type=int, help="Number of splits for KFold CV")
-parser.add_argument('--subsetsize', type=int, help="Subset size for tuning")
-
+parser.add_argument('--model_type', type=str, required=True)
 args = parser.parse_args()
 
 learning_rate = args.learning_rate
 epoch = args.epoch
+batch_size = args.batch_size
 model_checkpoint = args.model_checkpoint
-num_folds = args.num_folds
-subsetsize = args.subsetsize
+model_type = args.model_type
 
 directory = '../Data/SRL_train_with_entities'
 
@@ -59,24 +66,19 @@ for label in label_mapping.keys():
 print(label_list)
 
 task = "semantic-role-labeling"
-batch_size = 16 #determines the number of examples that are processed in one forward pass (when data is passed through the model
 SEED = 222
 
-tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
-special_tokens = {'additional_special_tokens': ['[PRED]']}
-tokenizer.add_special_tokens(special_tokens)
-print(tokenizer.all_special_tokens)
 
 #The DataCollatorForTokenClassification handles dynamic padding of input sequences during training.
 #It ensures that all sequences in a batch are padded to the longest sequence length, maintaining consistency while keeping memory usage optimized.
-data_collator = DataCollatorForTokenClassification(tokenizer)
 
-files_dict = process_file_to_dict(file_paths, label_mapping)
 
-augmented_inputs = augment_sent_with_pred(files_dict, tokenizer)
-dataset_files = Dataset.from_list(augmented_inputs)
-dataset_files = dataset_files.select(range(subsetsize))
-print(dataset_files)
+#files_dict = process_file_to_dict(file_paths, label_mapping)
+
+#augmented_inputs = augment_sent_with_pred(files_dict, tokenizer)
+#dataset_files = Dataset.from_list(augmented_inputs)
+#dataset_files = dataset_files.select(range(subsetsize))
+#print(dataset_files)
 
 
 # We use the predefined metric from seqeval to calculate the model's performance metric = load("seqeval") 
@@ -125,15 +127,7 @@ def compute_metrics(p):
         "accuracy": results["overall_accuracy"],    # Accuracy metric
     }
 
-raw_dataset = dataset_files
-dataset = dataset_files 
-dataset = dataset.remove_columns(["token_type_ids", "word_ids"])
-dataset.set_format(type="torch", columns=["input_ids", "attention_mask", "labels"])
-
-id2label = {v: k for k, v in label_mapping.items()}
 # Generate stratify labels for all sequences
-stratify_labels = [get_first_non_O_label(seq, id2label) for seq in dataset["labels"]]
-
 #stratified KFold
 #KFold
 
@@ -143,23 +137,59 @@ all_recall_scores = []
 all_accuracy_scores = []
 all_loss_scores = []
 all_metrics = []
+all_classes = []
 
+docs = range(len(file_paths)) 
 
-#stratified: 
-folds = StratifiedKFold(n_splits=num_folds, shuffle=True, random_state = 42)
-for fold, (train_index, test_index) in enumerate(folds.split(dataset, stratify_labels)):
-    print(f"\nFold {fold + 1} Training and Evaluation:")
-    #initialize model
+for index in docs:
+
+    train_files, test_file, test_file_name, fold = train_test_split_documents(file_paths, index)
+    test_file_name = os.path.splitext(os.path.basename(test_file_name))[0]
+
+    if model_type == 'BERT':
+        tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
+    elif model_type == 'RoBERTa':
+        tokenizer = RobertaTokenizerFast.from_pretrained(model_checkpoint, add_prefix_space=True)
+    special_tokens = {'additional_special_tokens': ['[PRED]']}
+    tokenizer.add_special_tokens(special_tokens)
     model = AutoModelForTokenClassification.from_pretrained(model_checkpoint, num_labels=len(label_list))
-
     # to include the added special tokens cue[0],cue[1],cue[2], model is resized
     model.resize_token_embeddings(len(tokenizer))
+    data_collator = DataCollatorForTokenClassification(tokenizer)
+
+
+    files_dict_train = process_file_to_dict(train_files, label_mapping)
+    files_dict_test = process_file_to_dict(test_file, label_mapping)
+    augmented_inputs_train = augment_sent_with_pred(files_dict_train, tokenizer)
+    augmented_inputs_test = augment_sent_with_pred(files_dict_test, tokenizer)
+    dataset_train = Dataset.from_list(augmented_inputs_train)
+    dataset_test = Dataset.from_list(augmented_inputs_test)
+    raw_dataset_test = dataset_test
+
+    columns_to_remove = ["token_type_ids", "word_ids"]
+    # Check if columns exist before removing
+    existing_columns = [col for col in columns_to_remove if col in dataset_train.column_names]
+    dataset_train = dataset_train.remove_columns(existing_columns)
+    dataset_train.set_format(type="torch", columns=["input_ids", "attention_mask", "labels"])
+    dataset_test = dataset_test.remove_columns(existing_columns)
+    dataset_test.set_format(type="torch", columns=["input_ids", "attention_mask", "labels"])
+
+    #dataset_files = dataset_files.select(range(subsetsize))
+    #print(dataset_files)
+
+    #stratified: 
+    #folds = StratifiedKFold(n_splits=num_folds, shuffle=True, random_state = 42)
+    #for fold, (train_index, test_index) in enumerate(folds.split(dataset, stratify_labels)):
+    #print(f"\nFold {fold + 1} Training and Evaluation:")
+    #initialize model
 
     model_name = model_checkpoint.split("/")[-1]
     args = TrainingArguments(
-        f"{model_name}-finetuned-{task}",
+        output_dir = base_output_dir,
         eval_strategy = "epoch",
         logging_strategy = 'epoch', 
+        save_strategy = 'epoch',
+        save_total_limit = 1,
         learning_rate=learning_rate,
         per_device_train_batch_size=batch_size,
         per_device_eval_batch_size=batch_size,
@@ -169,14 +199,14 @@ for fold, (train_index, test_index) in enumerate(folds.split(dataset, stratify_l
         report_to=None,
     )
     # Split dataset into training and validation sets for the fold
-    train_data = dataset.select(train_index)
-    test_data = dataset.select(test_index)
+    #train_data = dataset.select(train_index)
+    #test_data = dataset.select(test_index)
     #initilize model trainer 
     trainer = Trainer(
         model, # BERT model
         args, #training arguments that define training parameters like learning rate, batch size as specified above
-        train_dataset=train_data,   # dataset used for training
-        eval_dataset=test_data, #dataset used for evaluating the model during training
+        train_dataset=dataset_train,   # dataset used for training
+        eval_dataset=dataset_test, #dataset used for evaluating the model during training
         #Data collator to batch and preprocess the data (handles padding, tokenization, etc.)
         data_collator=data_collator, 
         #tokenizer as initiated in the beginning
@@ -193,18 +223,17 @@ for fold, (train_index, test_index) in enumerate(folds.split(dataset, stratify_l
         logs= dict(log)
         logs['fold'] = fold + 1
         all_metrics.append(logs)
-    
-    test_dicts = raw_dataset.select(test_index).to_list()
 
-    predictions, labels, metrics = trainer.predict(test_data)
+    #test_dicts = raw_dataset_test.to_list()
+
+    predictions, labels, metrics = trainer.predict(dataset_test)
     predictions = np.argmax(predictions, axis=2)
     loss = metrics["test_loss"] 
     all_loss_scores.append(loss)
-    
-    test_dict = test_data.to_list()
-    word_predictions, word_labels = post_process(predictions, labels, test_dicts)
 
-    test_tokens = [files_dict[i] for i in test_index]
+    word_predictions, word_labels = post_process(predictions, labels, augmented_inputs_test)
+
+    test_tokens = files_dict_test
     all_sents = []
     all_lbls = []
     for dct in test_tokens:
@@ -213,11 +242,13 @@ for fold, (train_index, test_index) in enumerate(folds.split(dataset, stratify_l
 
     value_to_key_mapping = {v: k for k, v in label_mapping.items()}
 
-    outputfile = 'pred_versus_gold_test.txt' 
-    with open(outputfile, 'a') as outfile:
+    outputfile = os.path.join(base_output_dir, f"complete_pred_versus_gold_fold{fold+1}.txt") 
+    with open(outputfile, 'w') as outfile:
         # Write the column headers to the TSV file
         if outfile.tell() == 0:
             outfile.write("Token\tGold\tPrediction\n")  # Column headers for TSV
+
+        outfile.write(f"=== Fold {fold+1} Document {test_file_name} ===\n")
         for preds, labels, tokens in zip(word_predictions, word_labels, all_sents):
             for pred, label, token in zip(preds, labels, tokens):
                 pred = value_to_key_mapping[pred]
@@ -225,32 +256,31 @@ for fold, (train_index, test_index) in enumerate(folds.split(dataset, stratify_l
                 outfile.write(f"{token}\t{label}\t{pred}\n")
             outfile.write("\n")
                     
-  
+
     # Convert indices to label strings
     flat_predictions = list(itertools.chain.from_iterable(word_predictions))
     flat_labels = list(itertools.chain.from_iterable(word_labels))
     flat_predictions = [value_to_key_mapping[label] for label in flat_predictions]
     flat_labels = [value_to_key_mapping[label] for label in flat_labels]
 
-    
-    precision = precision_score(flat_labels, flat_predictions, average = 'macro')  # Precision metric
-    recall = recall_score(flat_labels, flat_predictions, average= 'macro')        # Recall metric
-    f1 = f1_score(flat_labels, flat_predictions, average = 'macro')               # F1 score (harmonic mean of precision and recall)
-    accuracy = accuracy_score(flat_labels, flat_predictions)  # Accuracy metric
+    precision, recall, f1, accuracy, per_class = compute_filtered_macro_scores(flat_labels, flat_predictions)
+
     all_precision_scores.append(precision)
     all_recall_scores.append(recall)
     all_f1_scores.append(f1)
     all_accuracy_scores.append(accuracy)
-    generate_report(flat_labels, flat_predictions, label_list, fold, output_file = 'classification_reports_test.txt')
-    
-data_scores = {'precision': all_precision_scores, 'recall': all_recall_scores, 'f1': all_f1_scores, 'accuracy': all_accuracy_scores, 'loss': all_loss_scores}
+    all_classes.append(per_class)
+    generate_report(flat_labels, flat_predictions, label_list, fold, test_file_name, output_file = os.path.join(base_output_dir, "classification_reports.txt"))
+    cf_matrix = generate_confusion_matrix(flat_labels, flat_predictions, label_list, fold, test_file_name, output_plot_file= os.path.join(base_output_dir, f"SRL_CM_fold{fold+1}.png"), output_matrix_file= os.path.join(base_output_dir,'all_matrices.csv'))
+    save_confusion_matrix_long_format(cf_matrix, label_list, fold, test_file_name, output_long_matrix_file=os.path.join(base_output_dir, "long_format_matrix.csv"))
+
 # Save to a JSON file
-metrics_file = 'all_metrics_test.json'
-run_result = {'learning_rate': learning_rate, 'epochs': epoch, 'model_checkpoint': model_checkpoint, 
-              'metrics': {'precision': all_precision_scores, 'recall': all_recall_scores, 'f1': all_f1_scores, 'accuracy': all_accuracy_scores, 'loss': all_loss_scores, 'epoch_logs': all_metrics}}
+metrics_file = os.path.join(base_output_dir, "all_metrics_complete.json")
+run_result = {'learning_rate': learning_rate, 'epochs': epoch, 'model_checkpoint': model_checkpoint, 'batch_size':batch_size,
+            'metrics': {'precision': all_precision_scores, 'recall': all_recall_scores, 'f1': all_f1_scores, 'accuracy': all_accuracy_scores, 'per_class_scores': all_classes, 'loss': all_loss_scores, 'epoch_logs': all_metrics}}
 
 #with open('agg_metrics_test.json', 'a') as f:
-    #json.dump(data_scores, f)
+#json.dump(data_scores, f)
 
 if os.path.exists(metrics_file):
     with open(metrics_file, 'r') as f: 
@@ -261,5 +291,5 @@ else:
 all_runs.append(run_result)
 
 with open(metrics_file, 'w') as f:
-    json.dump(all_runs, f)
+    json.dump(all_runs, f, indent=2)
 
