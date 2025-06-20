@@ -7,6 +7,15 @@ import matplotlib.pyplot as plt
 import os
 
 def list_of_files(directory):
+    """
+    Recursively collects all .conllu files from a given directory and its subdirectories.
+
+    Parameters:
+    directory (str): The root directory to search for .conllu files.
+
+    Returns:
+    list of str: A list of full file paths to all found .conllu files.
+    """
     file_paths = []
     for path in glob.glob(os.path.join(directory, '**', '*.conllu'), recursive = True):
         if os.path.isfile(path):
@@ -156,6 +165,21 @@ def augment_sent_with_pred(dict_sentences, tokenizer):
     return all_inputs
 
 def train_test_split_documents(file_paths, index):
+    """
+    Splits a list of file paths into training and test sets based on a specified index.
+
+    Parameters:
+    file_paths (list of str): List of file paths (e.g., to .conllu files).
+    index (int): Index of the file to be used as the test set.
+
+    Returns:
+    tuple:
+        - train_files (list of str): File paths used for training (all except the test file).
+        - test_file (list of str): A single-element list containing the test file path.
+        - test_file_name (str): The file path of the test file.
+        - index (int): The index used for selecting the test file.
+
+    """
     test_file = []
     train_files = []
     for i, path in enumerate(file_paths):
@@ -296,6 +320,23 @@ def generate_report(all_labels, all_preds, label_list, fold, test_file_name, out
 
 
 def generate_confusion_matrix(all_labels, all_preds, label_list, fold, test_file_name, output_plot_file=None, output_matrix_file=None):
+    """
+    Generates a confusion matrix from true and predicted labels, optionally saves a heatmap plot and a CSV matrix.
+
+    Parameters:
+    all_labels (list of str): True labels from the evaluation set.
+    all_preds (list of str): Predicted labels from the model.
+    label_list (list of str): List of all label classes to include in the confusion matrix.
+    fold (int): Fold number used for labeling the output (e.g., in cross-validation), incremented by 1 for display.
+    test_file_name (str): Name of the test file used in this evaluation run.
+    output_plot_file (str, optional): File path to save the confusion matrix heatmap plot as an image (e.g., .png).
+                                      If None, the plot will be shown interactively.
+    output_matrix_file (str, optional): File path to append the confusion matrix as CSV text (with fold info and headers).
+                                        If None, the matrix will not be saved as CSV.
+
+    Returns:
+    np.ndarray: The raw confusion matrix as a 2D NumPy array.
+    """
     cf_matrix = confusion_matrix(all_labels, all_preds, labels=label_list)
 
      # Create a heatmap
@@ -339,6 +380,23 @@ def generate_confusion_matrix(all_labels, all_preds, label_list, fold, test_file
     return cf_matrix
 
 def save_confusion_matrix_long_format(cf_matrix, label_list, fold, test_file_name, output_long_matrix_file):
+    """
+    Converts a confusion matrix into long-format (tidy) CSV and appends it to a file.
+
+    Parameters:
+    cf_matrix (np.ndarray): 2D array representing the confusion matrix.
+    label_list (list of str): List of class labels corresponding to the matrix axes.
+    fold (int): The fold number (typically used in cross-validation), incremented by 1 in the output.
+    test_file_name (str): Name of the test file associated with the current matrix.
+    output_long_matrix_file (str): File path to the output CSV file where the matrix will be saved.
+
+    Returns:
+    None
+
+    Notes:
+    - The long-format output contains columns: Fold, Test_File, True_Label, Predicted_Label, and Count.
+    - Appends to the specified file if it already exists; otherwise, creates a new file with a header.
+    """
     rows = []
     for i, true_label in enumerate(label_list):
         for j, pred_label in enumerate(label_list):
