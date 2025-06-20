@@ -23,7 +23,7 @@ modelnames=('globalise/GloBERTise') #'FacebookAI/xlm-roberta-base'  #'google-ber
 model_types=('RoBERTa')
 
 
-DEST="/gpfs/home2/hgoossens/Documents/NER/RoBERTa/"
+DEST="/gpfs/home2/hgoossens/Documents/NERC/gloBERT/"
 mkdir -p "$DEST"
 
 for learningrate in "${learningrates[@]}"
