@@ -19,10 +19,10 @@ module load PyTorch/2.1.2-foss-2023a-CUDA-12.1.1
 learningrates=(5e-5)
 epochs=(30)
 batch_sizes=(16)
-modelnames=('FacebookAI/xlm-roberta-base') #'' #'google-bert/bert-base-multilingual-cased'
-model_types=('RoBERTa') #RoBERTa
+modelnames=('globalise/GloBERTise') #'FacebookAI/xlm-roberta-base'  #'google-bert/bert-base-multilingual-cased'
+model_types=('RoBERTa')
 
-DEST="/gpfs/home2/hgoossens/Documents/Multi/MT_old/"
+DEST="/gpfs/home2/hgoossens/Documents/Multi/gloBERT"
 mkdir -p "$DEST"
 
 for learningrate in "${learningrates[@]}"
