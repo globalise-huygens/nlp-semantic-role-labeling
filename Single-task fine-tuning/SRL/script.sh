@@ -22,7 +22,7 @@ batch_sizes=(16)
 modelnames=('globalise/GloBERTise') #'FacebookAI/xlm-roberta-base'  #'google-bert/bert-base-multilingual-cased'
 model_types=('RoBERTa')
 
-DEST="/gpfs/home2/hgoossens/Documents/Single/gloBERT/"
+DEST="/gpfs/home2/hgoossens/Documents/SRL/gloBERT/"
 mkdir -p "$DEST"
 
 for learningrate in "${learningrates[@]}"
