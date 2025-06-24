@@ -20,9 +20,9 @@ learningrates=(5e-5)
 epochs=(30)
 batch_sizes=(16)
 modelnames=('globalise/GloBERTise') #'FacebookAI/xlm-roberta-base'  #'google-bert/bert-base-multilingual-cased'
-model_types=('RoBERTa')
+model_types=('RoBERTa') #XLM-R #BERT
 
-DEST="/gpfs/home2/hgoossens/Documents/SRL/gloBERT/"
+DEST="/gpfs/home2/hgoossens/Documents/SRL/gloBERT/" #where to save results on Snellius
 mkdir -p "$DEST"
 
 for learningrate in "${learningrates[@]}"
