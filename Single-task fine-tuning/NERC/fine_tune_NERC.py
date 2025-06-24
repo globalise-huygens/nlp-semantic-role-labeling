@@ -283,8 +283,6 @@ metrics_file = os.path.join(base_output_dir, "all_metrics_complete.json")
 run_result = {'learning_rate': learning_rate, 'epochs': epoch, 'model_checkpoint': model_checkpoint, 'batch_size':batch_size,
             'metrics': {'precision': all_precision_scores, 'recall': all_recall_scores, 'f1': all_f1_scores, 'accuracy': all_accuracy_scores, 'per_class_scores': all_classes, 'loss': all_loss_scores, 'epoch_logs': all_metrics}}
 
-#with open('agg_metrics_test.json', 'a') as f:
-#json.dump(data_scores, f)
 
 if os.path.exists(metrics_file):
     with open(metrics_file, 'r') as f: 
