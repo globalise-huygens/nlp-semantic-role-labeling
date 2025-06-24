@@ -36,7 +36,7 @@ do
             do
                 for model_type in "${model_types}"
                 do
-                python ft_NER.py --learning_rate=$learningrate \
+                python fine_tune_NERC.py --learning_rate=$learningrate \
                                         --epoch=$epoch \
                                         --batch_size=$batch_size \
                                         --model_checkpoint=$modelname \
