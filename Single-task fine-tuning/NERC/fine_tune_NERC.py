@@ -60,29 +60,11 @@ with open('label_mapping_NER.json', 'r', encoding='utf-8') as f:
 
 # Get list of unique labels
 label_list = [label for label in label_mapping.keys()]
-print(label_list)
 
 task = "NERC"
 SEED = 222
 
-tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
-
-#The DataCollatorForTokenClassification handles dynamic padding of input sequences during training.
-#It ensures that all sequences in a batch are padded to the longest sequence length, maintaining consistency while keeping memory usage optimized.
-data_collator = DataCollatorForTokenClassification(tokenizer)
-
-#files_dict = process_file_to_dict(file_paths, label_mapping)
-
-#augmented_inputs = augment_sent_with_pred(files_dict, tokenizer)
-#dataset_files = Dataset.from_list(augmented_inputs)
-#dataset_files = dataset_files.select(range(subsetsize))
-#print(dataset_files)
-
-
-# We use the predefined metric from seqeval to calculate the model's performance metric = load("seqeval") 
-
 metric = load("seqeval")
-#metric = evaluate.load("./seqeval/seqeval.py")
 
 def compute_metrics(p):
     """
@@ -99,11 +81,9 @@ def compute_metrics(p):
     predictions, labels = p  # Unpack the tuple 'p' into predictions and labels
 
     # Convert the model's predictions (raw probabilities) to the predicted class labels
-    # np.argmax(predictions, axis=2) gives the index of the highest probability for each token (token classification task)
     predictions = np.argmax(predictions, axis=2)
 
     # Remove ignored index (special tokens) (like padding tokens, denoted by -100)
-    # We filter out predictions and labels where the label is -100 (special token, padding)
     true_predictions = [
         [label_list[p] for (p, l) in zip(prediction, label) if l != -100]  # Use the label list to map predicted indices to labels
         for prediction, label in zip(predictions, labels)  # Iterate through each batch (prediction, label pair)
@@ -113,8 +93,6 @@ def compute_metrics(p):
         for prediction, label in zip(predictions, labels)  # Iterate through each batch (prediction, label pair)
     ]
 
-    # Compute the evaluation metrics using the seqeval library
-    # This calculates precision, recall, F1-score, and accuracy based on the filtered predictions and true labels
     results = metric.compute(predictions=true_predictions, references=true_labels)
 
     # Return the computed metrics in a dictionary
@@ -124,10 +102,6 @@ def compute_metrics(p):
         "f1": results["overall_f1"],                # F1 score (harmonic mean of precision and recall)
         "accuracy": results["overall_accuracy"],    # Accuracy metric
     }
-
-# Generate stratify labels for all sequences
-#stratified KFold
-#KFold
 
 all_f1_scores = []
 all_precision_scores = []
@@ -173,13 +147,7 @@ for index in docs:
     dataset_test = dataset_test.remove_columns(existing_columns)
     dataset_test.set_format(type="torch", columns=["input_ids", "attention_mask", "labels"])
 
-    #dataset_files = dataset_files.select(range(subsetsize))
-    #print(dataset_files)
 
-    #stratified: 
-    #folds = StratifiedKFold(n_splits=num_folds, shuffle=True, random_state = 42)
-    #for fold, (train_index, test_index) in enumerate(folds.split(dataset, stratify_labels)):
-    #print(f"\nFold {fold + 1} Training and Evaluation:")
     #initialize model
     model = AutoModelForTokenClassification.from_pretrained(model_checkpoint, num_labels=len(label_list))
 
@@ -201,21 +169,16 @@ for index in docs:
         seed=SEED,
         report_to=None,
     )
-    # Split dataset into training and validation sets for the fold
-    #train_data = dataset.select(train_index)
-    #test_data = dataset.select(test_index)
+
     #initilize model trainer 
     trainer = Trainer(
-        model, # BERT model
-        args, #training arguments that define training parameters like learning rate, batch size as specified above
-        train_dataset=dataset_train,   # dataset used for training
-        eval_dataset=dataset_test, #dataset used for evaluating the model during training
-        #Data collator to batch and preprocess the data (handles padding, tokenization, etc.)
+        model, 
+        args, 
+        train_dataset=dataset_train,   
+        eval_dataset=dataset_test, 
         data_collator=data_collator, 
-        #tokenizer as initiated in the beginning
         tokenizer=tokenizer,
-        #function to compute evaluation metrics (precision, recall, f1-score)
-        compute_metrics=compute_metrics #evaluation metrics based on model's predictions
+        compute_metrics=compute_metrics 
 
         )
 
@@ -226,9 +189,7 @@ for index in docs:
         logs= dict(log)
         logs['fold'] = fold + 1
         all_metrics.append(logs)
-
-    #test_dicts = raw_dataset_test.to_list()
-
+        
     predictions, labels, metrics = trainer.predict(dataset_test)
     predictions = np.argmax(predictions, axis=2)
     loss = metrics["test_loss"] 
