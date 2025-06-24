@@ -35,7 +35,7 @@ do
             do
                 for model_type in "${model_types}"
                 do
-                python MT1_old.py --learning_rate=$learningrate \
+                python MTL.py --learning_rate=$learningrate \
                                         --epoch=$epoch \
                                         --batch_size=$batch_size \
                                         --model_checkpoint=$modelname \
