@@ -23,6 +23,9 @@ from transformers import AutoModelForTokenClassification, TrainingArguments, Tra
 import re
 import argparse
 
+from torch.utils.data import DataLoader
+from torch.nn import CrossEntropyLoss
+
 import torch
 from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, precision_recall_fscore_support
@@ -301,14 +304,8 @@ class MultitaskTrainer(transformers.Trainer):
             #yield batch
 # Metrics computation with seqeval
 
-from torch.utils.data import DataLoader
-from torch.nn import CrossEntropyLoss
-
-# Directory and file paths setup
-directory = '../Data/SRL_train_with_entities'
 
 file_paths = list_of_files(directory)
-print(file_paths)
 
 # Load mappings
 with open('label_mapping_NER.json', 'r', encoding='utf-8') as f:
@@ -316,32 +313,30 @@ with open('label_mapping_NER.json', 'r', encoding='utf-8') as f:
 
 # Get list of unique labels
 label_list_NER = [label for label in label_mapping_NER.keys()]
-print(label_list_NER)
+
 # Load mapping
 with open('label_mapping.json', 'r', encoding='utf-8') as f:
     label_mapping_SRL = json.load(f)
 
 # Get list of unique labels
 label_list_SRL = [label for label in label_mapping_SRL.keys()]
-print(label_list_SRL)
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--learning_rate', type=float, required=True)
 parser.add_argument('--epoch', type=int, required=True)
 parser.add_argument('--batch_size', type=int, help="Batch size for training")
 parser.add_argument('--model_checkpoint', type=str, required=True)
-parser.add_argument('--model_type', type=str, required=True)
+parser.add_argument('--model_type', type=str, required=True, help="Which type of model is used (BERT/RoBERTa/XLM-R)")
+parser.add_argument('--directory', type=str, required=True, help="File path to where data is stored")
 args = parser.parse_args()
 
-# Inject arguments
 learning_rate = args.learning_rate
-num_epochs = args.epoch
+epoch = args.epoch
 batch_size = args.batch_size
 model_checkpoint = args.model_checkpoint
 model_type = args.model_type
-
-
-
+directory = args.directory
 
 #total_examples = len(srl_dataset) + len(ner_dataset)
 SEED = 222
