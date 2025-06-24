@@ -21,36 +21,39 @@ epochs=(30)
 batch_sizes=(16)
 modelnames=('globalise/GloBERTise') #'FacebookAI/xlm-roberta-base'  #'google-bert/bert-base-multilingual-cased'
 model_types=('RoBERTa') #XLM-R #BERT
+data_directory=('path/to/where/data/files/are/stored') #path to where on machine the data is located
 
-
-DEST="/gpfs/home2/hgoossens/Documents/NERC/gloBERT/" #where to save results on Snellius
+DEST="path/to/save/results/on/Snellius" #where to save results on Snellius
 mkdir -p "$DEST"
 
 for learningrate in "${learningrates[@]}"
 do
     for epoch in "${epochs[@]}"
     do
-    for batch_size in "${batch_sizes[@]}"
+        for batch_size in "${batch_sizes[@]}"
         do
             for modelname in "${modelnames[@]}"
             do
                 for model_type in "${model_types}"
                 do
-                python fine_tune_NERC.py --learning_rate=$learningrate \
-                                        --epoch=$epoch \
-                                        --batch_size=$batch_size \
-                                        --model_checkpoint=$modelname \
-                                        --model_type=$model_type
-
-                
-                cp $TMPDIR/outputs/*.json "$DEST" 2>/dev/null
-                cp $TMPDIR/outputs/*.csv "$DEST" 2>/dev/null
-                cp $TMPDIR/outputs/*.txt "$DEST" 2>/dev/null
-                cp $TMPDIR/outputs/*.png "$DEST" 2>/dev/null 
-
-                # Checkpoint (already limited to one)
-                cp -r $TMPDIR/outputs/checkpoint-* "$DEST" 2>/dev/null
-
+                    for directory in "${data_directory[@]}"
+                    do 
+                    python fine_tune_NERC.py --learning_rate=$learningrate \
+                                            --epoch=$epoch \
+                                            --batch_size=$batch_size \
+                                            --model_checkpoint=$modelname \
+                                            --model_type=$model_type \
+                                            --directory=$directory
+    
+                    
+                    cp $TMPDIR/outputs/*.json "$DEST" 2>/dev/null
+                    cp $TMPDIR/outputs/*.csv "$DEST" 2>/dev/null
+                    cp $TMPDIR/outputs/*.txt "$DEST" 2>/dev/null
+                    cp $TMPDIR/outputs/*.png "$DEST" 2>/dev/null 
+    
+                    # Checkpoint (already limited to one)
+                    cp -r $TMPDIR/outputs/checkpoint-* "$DEST" 2>/dev/null
+                    done
                 done
             done
         done
