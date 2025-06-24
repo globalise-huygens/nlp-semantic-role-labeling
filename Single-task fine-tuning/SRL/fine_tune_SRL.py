@@ -25,8 +25,7 @@ import argparse
 import torch
 from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-from sklearn.model_selection import StratifiedKFold
-from sklearn.model_selection import KFold
+
 
 from functions_SRL import process_file_to_dict, augment_sent_with_pred, train_test_split_documents, post_process, generate_report, generate_confusion_matrix, save_confusion_matrix_long_format, compute_filtered_macro_scores
 
@@ -35,7 +34,8 @@ parser.add_argument('--learning_rate', type=float, help="Learning rate for train
 parser.add_argument('--epoch', type=int, help="Number of epochs for training")
 parser.add_argument('--batch_size', type=int, help="Batch size for training")
 parser.add_argument('--model_checkpoint', type=str, help="Model checkpoint name")
-parser.add_argument('--model_type', type=str, required=True)
+parser.add_argument('--model_type', type=str, required=True, help="Which type of model is used (BERT/RoBERTa/XLM-R)")
+parser.add_argument('--directory', type=str, required=True, help="File path to where data is stored")
 args = parser.parse_args()
 
 learning_rate = args.learning_rate
@@ -43,8 +43,7 @@ epoch = args.epoch
 batch_size = args.batch_size
 model_checkpoint = args.model_checkpoint
 model_type = args.model_type
-
-directory = '../Data/SRL_train_with_entities'
+directory = args.directory
 
 def list_of_files(directory):
     file_paths = []
