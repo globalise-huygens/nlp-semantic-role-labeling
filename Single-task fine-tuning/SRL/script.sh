@@ -21,8 +21,9 @@ epochs=(30)
 batch_sizes=(16)
 modelnames=('globalise/GloBERTise') #'FacebookAI/xlm-roberta-base'  #'google-bert/bert-base-multilingual-cased'
 model_types=('RoBERTa') #XLM-R #BERT
+data_directory=('path_to_data_files') 
 
-DEST="/gpfs/home2/hgoossens/Documents/SRL/gloBERT/" #where to save results on Snellius
+DEST="path_to_save_results_on_Snellius " #where to save results on Snellius
 mkdir -p "$DEST"
 
 for learningrate in "${learningrates[@]}"
@@ -35,11 +36,14 @@ do
             do
                 for model_type in "${model_types[@]}"
                 do
+                    for directory in "${data_directory[@]}"
+                    do
                 python fine_tune_SRL.py --learning_rate=$learningrate \
                                         --epoch=$epoch \
                                         --batch_size=$batch_size \
                                         --model_checkpoint=$modelname \
-                                        --model_type=$model_type
+                                        --model_type=$model_type \
+                                        --directory=$directory
 
                 cp $TMPDIR/outputs/*.json "$DEST" 2>/dev/null
                 cp $TMPDIR/outputs/*.csv "$DEST" 2>/dev/null
