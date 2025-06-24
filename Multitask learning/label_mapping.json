@@ -1,0 +1,1 @@
+{"B-Agent": 0, "B-AgentPatient": 1, "B-Benefactive": 2, "B-Cargo": 3, "B-Instrument": 4, "B-Location": 5, "B-Path": 6, "B-Patient": 7, "B-Source": 8, "B-Target": 9, "B-Time": 10, "I-Agent": 11, "I-AgentPatient": 12, "I-Benefactive": 13, "I-Cargo": 14, "I-Instrument": 15, "I-Location": 16, "I-Path": 17, "I-Patient": 18, "I-Source": 19, "I-Target": 20, "I-Time": 21, "O": 22}
