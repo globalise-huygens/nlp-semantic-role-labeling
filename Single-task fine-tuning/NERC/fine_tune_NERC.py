@@ -56,7 +56,7 @@ file_paths = list_of_files(directory)
 print(file_paths)
 
 # Load mappings
-with open('label_mapping_NER', 'r', encoding='utf-8') as f:
+with open('label_mapping_NER.json', 'r', encoding='utf-8') as f:
     label_mapping = json.load(f)
 
 # Get list of unique labels
