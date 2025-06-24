@@ -311,14 +311,14 @@ file_paths = list_of_files(directory)
 print(file_paths)
 
 # Load mappings
-with open('label_mapping_NER', 'r', encoding='utf-8') as f:
+with open('label_mapping_NER.json', 'r', encoding='utf-8') as f:
     label_mapping_NER = json.load(f)
 
 # Get list of unique labels
 label_list_NER = [label for label in label_mapping_NER.keys()]
 print(label_list_NER)
 # Load mapping
-with open('label_mapping', 'r', encoding='utf-8') as f:
+with open('label_mapping.json', 'r', encoding='utf-8') as f:
     label_mapping_SRL = json.load(f)
 
 # Get list of unique labels
