@@ -1,0 +1,690 @@
+Classification Report all Folds
+-------------------------------------------------
+Classification Report for Fold 1
+Classification Report for File: p_80-ner-event-preanno_NL-HaNA_1.04.02_11012_0229-0251 - 1736 -
+              precision    recall  f1-score   support
+
+ B-CMTY_NAME       0.92      0.65      0.76      1322
+ B-CMTY_QUAL       0.99      0.60      0.75       162
+B-CMTY_QUANT       0.73      0.79      0.76        56
+      B-DATE       0.72      0.98      0.83       101
+       B-DOC       0.39      0.78      0.52        59
+   B-ETH_REL       0.00      0.00      0.00         0
+   B-LOC_ADJ       0.61      1.00      0.76        30
+  B-LOC_NAME       0.48      0.74      0.58       106
+      B-None       0.00      0.00      0.00         0
+       B-ORG       0.79      0.90      0.84        77
+  B-PER_ATTR       0.55      0.33      0.41       169
+  B-PER_NAME       0.83      0.97      0.89       572
+       B-PRF       0.66      0.66      0.66       191
+      B-SHIP       0.00      0.00      0.00         0
+ B-SHIP_TYPE       0.28      1.00      0.44        11
+    B-STATUS       0.53      0.95      0.68       495
+ I-CMTY_NAME       0.89      0.15      0.26        53
+ I-CMTY_QUAL       0.00      0.00      0.00         0
+I-CMTY_QUANT       0.00      0.00      0.00         0
+      I-DATE       0.97      0.91      0.94       473
+       I-DOC       0.00      0.00      0.00        14
+   I-ETH_REL       0.00      0.00      0.00         0
+   I-LOC_ADJ       0.00      0.00      0.00         0
+  I-LOC_NAME       0.93      0.92      0.92       274
+      I-None       0.00      0.00      0.00         0
+       I-ORG       0.03      0.01      0.01       154
+  I-PER_ATTR       0.00      0.00      0.00        38
+  I-PER_NAME       0.90      0.91      0.91       811
+       I-PRF       0.59      0.94      0.73       147
+      I-SHIP       0.00      0.00      0.00         0
+ I-SHIP_TYPE       0.00      0.00      0.00         0
+    I-STATUS       0.00      0.00      0.00         0
+           O       0.97      0.97      0.97     28084
+
+    accuracy                           0.94     33399
+   macro avg       0.42      0.46      0.41     33399
+weighted avg       0.94      0.94      0.94     33399
+
+-------------------------------------------------
+Classification Report for Fold 2
+Classification Report for File: p_80-ner-event-preanno_NL-HaNA_1.04.02_1595_0689-0699 - 1697 -
+              precision    recall  f1-score   support
+
+ B-CMTY_NAME       0.82      0.64      0.72       180
+ B-CMTY_QUAL       1.00      1.00      1.00         4
+B-CMTY_QUANT       0.67      0.41      0.51       103
+      B-DATE       0.90      0.62      0.73       244
+       B-DOC       0.85      0.95      0.90       199
+   B-ETH_REL       1.00      0.26      0.41       208
+   B-LOC_ADJ       0.65      0.38      0.48        74
+  B-LOC_NAME       0.80      0.91      0.85       391
+      B-None       0.00      0.00      0.00         5
+       B-ORG       0.62      0.57      0.60       228
+  B-PER_ATTR       0.61      0.83      0.71       546
+  B-PER_NAME       0.79      0.80      0.79       503
+       B-PRF       0.79      0.73      0.76       595
+      B-SHIP       0.00      0.00      0.00         0
+ B-SHIP_TYPE       0.98      0.99      0.99       148
+    B-STATUS       0.49      0.14      0.22       271
+ I-CMTY_NAME       0.00      0.00      0.00        14
+ I-CMTY_QUAL       0.00      0.00      0.00         0
+I-CMTY_QUANT       0.84      1.00      0.91       102
+      I-DATE       0.78      0.64      0.71       484
+       I-DOC       0.00      0.00      0.00         0
+   I-ETH_REL       0.00      0.00      0.00        66
+   I-LOC_ADJ       0.00      0.00      0.00        20
+  I-LOC_NAME       0.34      0.39      0.37        28
+      I-None       0.00      0.00      0.00         0
+       I-ORG       0.05      1.00      0.09         6
+  I-PER_ATTR       0.00      0.00      0.00         0
+  I-PER_NAME       0.82      0.96      0.89       334
+       I-PRF       0.43      0.58      0.49        31
+      I-SHIP       0.00      0.00      0.00         0
+ I-SHIP_TYPE       0.00      0.00      0.00         0
+    I-STATUS       0.00      0.00      0.00        13
+           O       0.97      0.98      0.98     23227
+
+    accuracy                           0.93     28024
+   macro avg       0.46      0.45      0.43     28024
+weighted avg       0.93      0.93      0.93     28024
+
+-------------------------------------------------
+Classification Report for Fold 3
+Classification Report for File: p_80-ner-event-preanno_NL-HaNA_1.04.02_3598_0797-0809 - 1781 -
+              precision    recall  f1-score   support
+
+ B-CMTY_NAME       0.80      0.78      0.79      5611
+ B-CMTY_QUAL       0.68      0.51      0.58       816
+B-CMTY_QUANT       0.94      0.57      0.71      5740
+      B-DATE       0.52      0.50      0.51       455
+       B-DOC       0.00      0.00      0.00         2
+   B-ETH_REL       0.75      0.10      0.18       479
+   B-LOC_ADJ       0.93      0.84      0.88       822
+  B-LOC_NAME       0.45      1.00      0.62       306
+      B-None       0.00      0.00      0.00        32
+       B-ORG       0.99      0.92      0.95       431
+  B-PER_ATTR       0.86      0.45      0.59      2054
+  B-PER_NAME       0.76      0.81      0.78      3762
+       B-PRF       0.04      0.12      0.06       417
+      B-SHIP       0.17      0.02      0.04        43
+ B-SHIP_TYPE       0.91      0.79      0.85       667
+    B-STATUS       0.69      0.68      0.68      2994
+ I-CMTY_NAME       0.00      0.00      0.00       707
+ I-CMTY_QUAL       0.00      0.00      0.00        24
+I-CMTY_QUANT       0.92      0.49      0.64     10455
+      I-DATE       0.49      0.70      0.57       686
+       I-DOC       0.00      0.00      0.00         0
+   I-ETH_REL       0.00      0.00      0.00        15
+   I-LOC_ADJ       0.00      0.00      0.00         0
+  I-LOC_NAME       0.00      0.00      0.00         0
+      I-None       0.00      0.00      0.00       128
+       I-ORG       0.96      1.00      0.98       862
+  I-PER_ATTR       0.00      0.00      0.00        36
+  I-PER_NAME       0.82      0.75      0.79      2831
+       I-PRF       0.00      0.00      0.00         0
+      I-SHIP       1.00      0.03      0.05        80
+ I-SHIP_TYPE       0.00      0.00      0.00       108
+    I-STATUS       0.00      0.00      0.00      1025
+           O       0.76      0.97      0.85     36541
+
+    accuracy                           0.77     78129
+   macro avg       0.44      0.36      0.37     78129
+weighted avg       0.78      0.77      0.75     78129
+
+-------------------------------------------------
+Classification Report for Fold 4
+Classification Report for File: p_80-ner-event-peranno_NL-HaNA_1.04.02_2693_0117-0119 - 1747 -
+              precision    recall  f1-score   support
+
+ B-CMTY_NAME       1.00      0.62      0.76        34
+ B-CMTY_QUAL       0.00      0.00      0.00         0
+B-CMTY_QUANT       0.00      0.00      0.00        13
+      B-DATE       1.00      1.00      1.00        22
+       B-DOC       0.66      0.95      0.78        22
+   B-ETH_REL       0.00      0.00      0.00         0
+   B-LOC_ADJ       1.00      1.00      1.00        21
+  B-LOC_NAME       0.95      0.95      0.95        40
+      B-None       0.00      0.00      0.00         0
+       B-ORG       0.00      0.00      0.00        26
+  B-PER_ATTR       0.06      0.13      0.08        15
+  B-PER_NAME       1.00      1.00      1.00         2
+       B-PRF       0.74      0.78      0.76        76
+      B-SHIP       0.00      0.00      0.00         0
+ B-SHIP_TYPE       0.38      1.00      0.55         9
+    B-STATUS       0.38      0.59      0.46        29
+ I-CMTY_NAME       0.00      0.00      0.00         0
+ I-CMTY_QUAL       0.00      0.00      0.00         0
+I-CMTY_QUANT       0.00      0.00      0.00         0
+      I-DATE       1.00      1.00      1.00        43
+       I-DOC       0.00      0.00      0.00         1
+   I-ETH_REL       0.00      0.00      0.00         0
+   I-LOC_ADJ       0.00      0.00      0.00         0
+  I-LOC_NAME       0.00      0.00      0.00         1
+      I-None       0.00      0.00      0.00         0
+       I-ORG       0.48      0.67      0.56        39
+  I-PER_ATTR       0.00      0.00      0.00         0
+  I-PER_NAME       1.00      1.00      1.00         7
+       I-PRF       0.87      0.51      0.64        53
+      I-SHIP       0.00      0.00      0.00         0
+ I-SHIP_TYPE       0.00      0.00      0.00         0
+    I-STATUS       0.00      0.00      0.00        13
+           O       0.99      0.98      0.98      3046
+
+    accuracy                           0.94      3512
+   macro avg       0.35      0.37      0.35      3512
+weighted avg       0.95      0.94      0.94      3512
+
+-------------------------------------------------
+Classification Report for Fold 5
+Classification Report for File: events_p_80-ner-NL-HaNA_1.04.02_2665_0459-0460 - 1746 - no title
+              precision    recall  f1-score   support
+
+ B-CMTY_NAME       0.00      0.00      0.00         0
+ B-CMTY_QUAL       0.00      0.00      0.00         0
+B-CMTY_QUANT       1.00      0.95      0.97        40
+      B-DATE       0.00      0.00      0.00         0
+       B-DOC       1.00      1.00      1.00        10
+   B-ETH_REL       0.00      0.00      0.00         0
+   B-LOC_ADJ       0.00      0.00      0.00         0
+  B-LOC_NAME       1.00      1.00      1.00        30
+      B-None       0.00      0.00      0.00         0
+       B-ORG       0.00      0.00      0.00        12
+  B-PER_ATTR       0.45      0.50      0.48        20
+  B-PER_NAME       1.00      1.00      1.00        12
+       B-PRF       0.83      0.83      0.83        12
+      B-SHIP       0.00      0.00      0.00         0
+ B-SHIP_TYPE       0.00      0.00      0.00         0
+    B-STATUS       0.71      1.00      0.83        20
+ I-CMTY_NAME       0.00      0.00      0.00         0
+ I-CMTY_QUAL       0.00      0.00      0.00         0
+I-CMTY_QUANT       1.00      0.14      0.25        70
+      I-DATE       0.00      0.00      0.00         0
+       I-DOC       0.00      0.00      0.00         0
+   I-ETH_REL       0.00      0.00      0.00         0
+   I-LOC_ADJ       0.00      0.00      0.00         0
+  I-LOC_NAME       1.00      1.00      1.00        10
+      I-None       0.00      0.00      0.00         0
+       I-ORG       1.00      0.06      0.11        36
+  I-PER_ATTR       0.00      0.00      0.00         0
+  I-PER_NAME       1.00      0.96      0.98        24
+       I-PRF       0.00      0.00      0.00         2
+      I-SHIP       0.00      0.00      0.00         0
+ I-SHIP_TYPE       0.00      0.00      0.00         0
+    I-STATUS       0.00      0.00      0.00         0
+           O       0.89      0.98      0.93       880
+
+    accuracy                           0.88      1178
+   macro avg       0.33      0.29      0.28      1178
+weighted avg       0.89      0.88      0.85      1178
+
+-------------------------------------------------
+Classification Report for Fold 6
+Classification Report for File: events_p_80-ner-NL-HaNA_1.04.02_7673_0062-0064 - 1716 - no title
+              precision    recall  f1-score   support
+
+ B-CMTY_NAME       0.81      1.00      0.90       103
+ B-CMTY_QUAL       0.00      0.00      0.00         0
+B-CMTY_QUANT       0.72      1.00      0.84        52
+      B-DATE       0.00      0.00      0.00         0
+       B-DOC       0.00      0.00      0.00         2
+   B-ETH_REL       0.00      0.00      0.00         0
+   B-LOC_ADJ       1.00      0.69      0.81        16
+  B-LOC_NAME       0.97      0.58      0.73       105
+      B-None       0.00      0.00      0.00         0
+       B-ORG       0.00      0.00      0.00         0
+  B-PER_ATTR       1.00      1.00      1.00         9
+  B-PER_NAME       0.54      1.00      0.70        94
+       B-PRF       1.00      0.45      0.62        20
+      B-SHIP       0.00      0.00      0.00         0
+ B-SHIP_TYPE       0.30      0.14      0.19        22
+    B-STATUS       1.00      0.89      0.94        63
+ I-CMTY_NAME       0.00      0.00      0.00         0
+ I-CMTY_QUAL       0.00      0.00      0.00         0
+I-CMTY_QUANT       1.00      0.82      0.90       174
+      I-DATE       0.00      0.00      0.00         0
+       I-DOC       0.00      0.00      0.00         0
+   I-ETH_REL       0.00      0.00      0.00         0
+   I-LOC_ADJ       0.00      0.00      0.00         0
+  I-LOC_NAME       0.00      0.00      0.00        33
+      I-None       0.00      0.00      0.00         0
+       I-ORG       0.00      0.00      0.00         0
+  I-PER_ATTR       0.00      0.00      0.00         0
+  I-PER_NAME       1.00      0.12      0.21        34
+       I-PRF       1.00      0.50      0.67        12
+      I-SHIP       0.00      0.00      0.00         0
+ I-SHIP_TYPE       0.00      0.00      0.00         7
+    I-STATUS       0.00      0.00      0.00         0
+           O       0.99      0.99      0.99      5503
+
+    accuracy                           0.96      6249
+   macro avg       0.34      0.28      0.29      6249
+weighted avg       0.97      0.96      0.96      6249
+
+-------------------------------------------------
+Classification Report for Fold 7
+Classification Report for File: events_p_80-ner-NL-HaNA_1.04.02_1439_0695-0695 - 1686 - no title
+              precision    recall  f1-score   support
+
+ B-CMTY_NAME       0.00      0.00      0.00        13
+ B-CMTY_QUAL       0.00      0.00      0.00         0
+B-CMTY_QUANT       0.00      0.00      0.00         0
+      B-DATE       0.94      0.84      0.89        81
+       B-DOC       0.50      0.50      0.50        34
+   B-ETH_REL       1.00      1.00      1.00        17
+   B-LOC_ADJ       1.00      1.00      1.00        51
+  B-LOC_NAME       0.87      0.88      0.87       137
+      B-None       0.00      0.00      0.00         0
+       B-ORG       0.50      0.23      0.32        56
+  B-PER_ATTR       0.00      0.00      0.00         0
+  B-PER_NAME       1.00      1.00      1.00        34
+       B-PRF       0.91      1.00      0.95       179
+      B-SHIP       0.58      0.73      0.65        64
+ B-SHIP_TYPE       1.00      0.64      0.78        94
+    B-STATUS       0.70      1.00      0.83        26
+ I-CMTY_NAME       0.00      0.00      0.00         0
+ I-CMTY_QUAL       0.00      0.00      0.00         0
+I-CMTY_QUANT       0.00      0.00      0.00         0
+      I-DATE       1.00      0.82      0.90       324
+       I-DOC       0.00      0.00      0.00         0
+   I-ETH_REL       0.00      0.00      0.00         0
+   I-LOC_ADJ       0.00      0.00      0.00         0
+  I-LOC_NAME       0.94      0.25      0.40        68
+      I-None       0.00      0.00      0.00         0
+       I-ORG       1.00      0.18      0.30       147
+  I-PER_ATTR       0.00      0.00      0.00         0
+  I-PER_NAME       0.99      1.00      1.00       102
+       I-PRF       1.00      0.90      0.95        51
+      I-SHIP       0.00      0.00      0.00         0
+ I-SHIP_TYPE       0.00      0.00      0.00         0
+    I-STATUS       0.00      0.00      0.00         0
+           O       0.94      0.99      0.96      4085
+
+    accuracy                           0.92      5563
+   macro avg       0.45      0.39      0.40      5563
+weighted avg       0.93      0.92      0.91      5563
+
+-------------------------------------------------
+Classification Report for Fold 8
+Classification Report for File: events_p_80-ner-NL-HaNA_1.04.02_1348_0784-0784 - 1679 - no title
+              precision    recall  f1-score   support
+
+ B-CMTY_NAME       0.00      0.00      0.00         0
+ B-CMTY_QUAL       0.00      0.00      0.00         0
+B-CMTY_QUANT       1.00      1.00      1.00        15
+      B-DATE       0.41      0.41      0.41        39
+       B-DOC       0.72      0.50      0.59        76
+   B-ETH_REL       1.00      0.40      0.57        15
+   B-LOC_ADJ       0.64      1.00      0.78        16
+  B-LOC_NAME       0.33      0.48      0.39        31
+      B-None       0.00      0.00      0.00         0
+       B-ORG       0.33      0.50      0.40        30
+  B-PER_ATTR       0.00      0.00      0.00        30
+  B-PER_NAME       0.32      0.32      0.32        22
+       B-PRF       0.54      1.00      0.70        52
+      B-SHIP       0.00      0.00      0.00        16
+ B-SHIP_TYPE       1.00      1.00      1.00        16
+    B-STATUS       0.94      1.00      0.97        15
+ I-CMTY_NAME       0.00      0.00      0.00         0
+ I-CMTY_QUAL       0.00      0.00      0.00         0
+I-CMTY_QUANT       0.96      0.98      0.97        45
+      I-DATE       1.00      0.70      0.82        76
+       I-DOC       0.00      0.00      0.00        15
+   I-ETH_REL       0.00      0.00      0.00         0
+   I-LOC_ADJ       0.00      0.00      0.00         0
+  I-LOC_NAME       0.00      0.00      0.00         0
+      I-None       0.00      0.00      0.00         0
+       I-ORG       1.00      0.67      0.80        45
+  I-PER_ATTR       0.00      0.00      0.00        90
+  I-PER_NAME       0.00      0.00      0.00        15
+       I-PRF       0.54      1.00      0.70        14
+      I-SHIP       0.00      0.00      0.00        16
+ I-SHIP_TYPE       0.00      0.00      0.00         0
+    I-STATUS       0.00      0.00      0.00         0
+           O       0.93      0.98      0.96      2440
+
+    accuracy                           0.88      3129
+   macro avg       0.35      0.36      0.34      3129
+weighted avg       0.85      0.88      0.86      3129
+
+-------------------------------------------------
+Classification Report for Fold 9
+Classification Report for File: preannotated-NL-HaNA_1.04.02_1066_0269-0270 -1618 -
+              precision    recall  f1-score   support
+
+ B-CMTY_NAME       0.87      0.31      0.46       370
+ B-CMTY_QUAL       0.00      0.00      0.00       162
+B-CMTY_QUANT       0.00      0.00      0.00        17
+      B-DATE       0.89      1.00      0.94       247
+       B-DOC       0.63      1.00      0.77        75
+   B-ETH_REL       0.00      0.00      0.00         0
+   B-LOC_ADJ       0.94      0.50      0.65        58
+  B-LOC_NAME       0.54      0.75      0.62       254
+      B-None       0.00      0.00      0.00         0
+       B-ORG       0.10      0.10      0.10        58
+  B-PER_ATTR       0.86      0.52      0.65       206
+  B-PER_NAME       1.00      1.00      1.00        63
+       B-PRF       0.66      1.00      0.80       196
+      B-SHIP       0.82      0.66      0.73       235
+ B-SHIP_TYPE       0.80      1.00      0.89       230
+    B-STATUS       0.91      1.00      0.95        29
+ I-CMTY_NAME       0.00      0.00      0.00        58
+ I-CMTY_QUAL       0.00      0.00      0.00         0
+I-CMTY_QUANT       0.00      0.00      0.00         0
+      I-DATE       0.99      0.96      0.98       482
+       I-DOC       0.00      0.00      0.00        17
+   I-ETH_REL       0.00      0.00      0.00         0
+   I-LOC_ADJ       0.00      0.00      0.00         0
+  I-LOC_NAME       0.50      0.41      0.45       145
+      I-None       0.00      0.00      0.00         0
+       I-ORG       0.57      0.27      0.36       116
+  I-PER_ATTR       0.00      0.00      0.00         0
+  I-PER_NAME       1.00      1.00      1.00        97
+       I-PRF       0.00      0.00      0.00        58
+      I-SHIP       0.93      1.00      0.96        51
+ I-SHIP_TYPE       0.00      0.00      0.00         0
+    I-STATUS       0.00      0.00      0.00         0
+           O       0.95      0.98      0.96     11648
+
+    accuracy                           0.91     14872
+   macro avg       0.42      0.41      0.40     14872
+weighted avg       0.90      0.91      0.90     14872
+
+-------------------------------------------------
+Classification Report for Fold 10
+Classification Report for File: preannotated-NL-HaNA_1.04.02_8596_0761-0766 - 1707 -
+              precision    recall  f1-score   support
+
+ B-CMTY_NAME       0.55      0.75      0.64       159
+ B-CMTY_QUAL       0.00      0.00      0.00        26
+B-CMTY_QUANT       0.98      0.50      0.66       102
+      B-DATE       0.88      0.82      0.85       245
+       B-DOC       0.65      0.87      0.74        30
+   B-ETH_REL       0.55      0.65      0.59        63
+   B-LOC_ADJ       0.79      0.89      0.84       485
+  B-LOC_NAME       0.86      0.92      0.89       613
+      B-None       0.00      0.00      0.00         0
+       B-ORG       0.00      0.00      0.00         2
+  B-PER_ATTR       1.00      0.30      0.46       374
+  B-PER_NAME       0.90      0.90      0.90       292
+       B-PRF       0.76      0.96      0.85       298
+      B-SHIP       1.00      1.00      1.00        28
+ B-SHIP_TYPE       0.93      0.94      0.93       527
+    B-STATUS       0.00      0.00      0.00         0
+ I-CMTY_NAME       1.00      0.05      0.10        55
+ I-CMTY_QUAL       0.00      0.00      0.00         0
+I-CMTY_QUANT       0.48      0.76      0.59        55
+      I-DATE       1.00      0.79      0.88       710
+       I-DOC       1.00      1.00      1.00         5
+   I-ETH_REL       0.00      0.00      0.00         0
+   I-LOC_ADJ       0.00      0.00      0.00        23
+  I-LOC_NAME       1.00      0.13      0.23       110
+      I-None       0.00      0.00      0.00         0
+       I-ORG       0.67      1.00      0.80         4
+  I-PER_ATTR       0.00      0.00      0.00         0
+  I-PER_NAME       0.87      0.86      0.86       270
+       I-PRF       0.88      1.00      0.93        21
+      I-SHIP       1.00      0.64      0.78        47
+ I-SHIP_TYPE       0.10      0.04      0.06        26
+    I-STATUS       0.00      0.00      0.00         0
+           O       0.98      0.99      0.98     22975
+
+    accuracy                           0.95     27545
+   macro avg       0.57      0.51      0.50     27545
+weighted avg       0.96      0.95      0.95     27545
+
+-------------------------------------------------
+Classification Report for Fold 11
+Classification Report for File: preannotated-NL-HaNA_1.04.02_4071_1019-1021 - 1713 -
+              precision    recall  f1-score   support
+
+ B-CMTY_NAME       0.00      0.00      0.00         0
+ B-CMTY_QUAL       0.00      0.00      0.00         0
+B-CMTY_QUANT       0.00      0.00      0.00         0
+      B-DATE       0.43      1.00      0.61        36
+       B-DOC       1.00      0.50      0.67        18
+   B-ETH_REL       0.00      0.00      0.00         0
+   B-LOC_ADJ       1.00      1.00      1.00         9
+  B-LOC_NAME       1.00      1.00      1.00        36
+      B-None       0.00      0.00      0.00         0
+       B-ORG       1.00      0.90      0.95        10
+  B-PER_ATTR       0.00      0.00      0.00        10
+  B-PER_NAME       0.00      0.00      0.00         0
+       B-PRF       0.78      0.95      0.86        19
+      B-SHIP       0.80      0.80      0.80        45
+ B-SHIP_TYPE       0.98      0.86      0.92        63
+    B-STATUS       0.00      0.00      0.00         0
+ I-CMTY_NAME       0.00      0.00      0.00         0
+ I-CMTY_QUAL       0.00      0.00      0.00         0
+I-CMTY_QUANT       0.00      0.00      0.00         0
+      I-DATE       1.00      0.60      0.75       126
+       I-DOC       0.00      0.00      0.00         0
+   I-ETH_REL       0.00      0.00      0.00         0
+   I-LOC_ADJ       0.00      0.00      0.00         0
+  I-LOC_NAME       1.00      0.78      0.88         9
+      I-None       0.00      0.00      0.00         0
+       I-ORG       0.00      0.00      0.00         0
+  I-PER_ATTR       0.00      0.00      0.00         0
+  I-PER_NAME       0.00      0.00      0.00         0
+       I-PRF       1.00      0.68      0.81        19
+      I-SHIP       0.00      0.00      0.00         0
+ I-SHIP_TYPE       1.00      1.00      1.00         9
+    I-STATUS       0.00      0.00      0.00         0
+           O       0.99      0.99      0.99      2315
+
+    accuracy                           0.96      2724
+   macro avg       0.36      0.34      0.34      2724
+weighted avg       0.97      0.96      0.96      2724
+
+-------------------------------------------------
+Classification Report for Fold 12
+Classification Report for File: preannotated-NL-HaNA_1.04.02_1430_1125-1132 - 1686 -
+              precision    recall  f1-score   support
+
+ B-CMTY_NAME       0.77      0.85      0.81       463
+ B-CMTY_QUAL       0.00      0.00      0.00        20
+B-CMTY_QUANT       0.44      0.75      0.55       269
+      B-DATE       0.74      0.48      0.58       113
+       B-DOC       0.90      0.69      0.78       231
+   B-ETH_REL       0.90      0.38      0.53        71
+   B-LOC_ADJ       0.74      0.97      0.84       202
+  B-LOC_NAME       0.75      0.87      0.80       306
+      B-None       0.00      0.00      0.00         0
+       B-ORG       0.97      0.33      0.50        96
+  B-PER_ATTR       0.91      0.72      0.80       252
+  B-PER_NAME       0.91      0.93      0.92       696
+       B-PRF       0.87      0.94      0.90       681
+      B-SHIP       0.50      0.75      0.60        69
+ B-SHIP_TYPE       0.82      0.85      0.83       308
+    B-STATUS       0.00      0.00      0.00        97
+ I-CMTY_NAME       0.00      0.00      0.00         0
+ I-CMTY_QUAL       0.00      0.00      0.00         0
+I-CMTY_QUANT       0.82      0.94      0.88       668
+      I-DATE       0.61      0.67      0.64       178
+       I-DOC       0.00      0.00      0.00        33
+   I-ETH_REL       0.00      0.00      0.00         0
+   I-LOC_ADJ       0.00      0.00      0.00         0
+  I-LOC_NAME       1.00      0.48      0.65       119
+      I-None       0.00      0.00      0.00         0
+       I-ORG       0.70      1.00      0.82        64
+  I-PER_ATTR       1.00      0.08      0.15        38
+  I-PER_NAME       0.97      0.74      0.84       757
+       I-PRF       0.70      0.68      0.69       167
+      I-SHIP       0.00      0.00      0.00        67
+ I-SHIP_TYPE       0.00      0.00      0.00        40
+    I-STATUS       0.00      0.00      0.00         0
+           O       0.97      0.97      0.97     25146
+
+    accuracy                           0.93     31151
+   macro avg       0.52      0.46      0.46     31151
+weighted avg       0.94      0.93      0.93     31151
+
+-------------------------------------------------
+Classification Report for Fold 13
+Classification Report for File: NL-HaNA_1.04.02_1090_0313-0322 - 1626 - Copie generale missive aan de heeren bewinthebberen in dato 15 Februarij 1626
+              precision    recall  f1-score   support
+
+ B-CMTY_NAME       0.42      1.00      0.59        49
+ B-CMTY_QUAL       0.00      0.00      0.00         0
+B-CMTY_QUANT       0.50      0.97      0.66        31
+      B-DATE       0.98      0.85      0.91       233
+       B-DOC       0.90      0.72      0.80        74
+   B-ETH_REL       0.00      0.00      0.00         0
+   B-LOC_ADJ       0.73      0.59      0.65       138
+  B-LOC_NAME       0.87      0.85      0.86       611
+      B-None       0.00      0.00      0.00         0
+       B-ORG       0.44      1.00      0.61        29
+  B-PER_ATTR       0.00      0.00      0.00         3
+  B-PER_NAME       0.49      0.89      0.63        44
+       B-PRF       0.72      0.61      0.66       205
+      B-SHIP       0.76      0.76      0.76       343
+ B-SHIP_TYPE       0.75      0.97      0.85       263
+    B-STATUS       0.00      0.00      0.00        38
+ I-CMTY_NAME       0.00      0.00      0.00         0
+ I-CMTY_QUAL       0.00      0.00      0.00         0
+I-CMTY_QUANT       0.78      0.85      0.82        34
+      I-DATE       0.95      0.80      0.87       475
+       I-DOC       0.00      0.00      0.00         0
+   I-ETH_REL       0.00      0.00      0.00         0
+   I-LOC_ADJ       0.00      0.00      0.00         0
+  I-LOC_NAME       0.54      0.49      0.51        59
+      I-None       0.00      0.00      0.00         0
+       I-ORG       1.00      0.76      0.87        85
+  I-PER_ATTR       0.00      0.00      0.00         3
+  I-PER_NAME       0.52      0.80      0.63        15
+       I-PRF       0.56      0.33      0.42        60
+      I-SHIP       0.86      0.54      0.66       114
+ I-SHIP_TYPE       1.00      1.00      1.00         6
+    I-STATUS       0.00      0.00      0.00         6
+           O       0.97      0.97      0.97     15456
+
+    accuracy                           0.94     18374
+   macro avg       0.45      0.48      0.45     18374
+weighted avg       0.95      0.94      0.94     18374
+
+-------------------------------------------------
+Classification Report for Fold 14
+Classification Report for File: NL-HaNA_1.04.02_9001_0344-0356 - 1720 - Verscheijde extracten uijt het Cochims dagregister concernerende de aankomst aldaar van 3 Portuge..
+              precision    recall  f1-score   support
+
+ B-CMTY_NAME       0.56      0.93      0.70        83
+ B-CMTY_QUAL       0.00      0.00      0.00        12
+B-CMTY_QUANT       0.51      0.95      0.67        19
+      B-DATE       0.53      0.77      0.63        75
+       B-DOC       0.75      0.74      0.75       137
+   B-ETH_REL       1.00      0.75      0.86        20
+   B-LOC_ADJ       0.62      1.00      0.76       137
+  B-LOC_NAME       0.62      0.93      0.74       179
+      B-None       0.00      0.00      0.00         0
+       B-ORG       0.38      0.24      0.30        37
+  B-PER_ATTR       0.00      0.00      0.00         0
+  B-PER_NAME       0.68      0.85      0.76       266
+       B-PRF       0.70      0.88      0.78       474
+      B-SHIP       0.47      0.19      0.27        73
+ B-SHIP_TYPE       0.90      0.97      0.93       265
+    B-STATUS       0.00      0.00      0.00        42
+ I-CMTY_NAME       0.00      0.00      0.00         6
+ I-CMTY_QUAL       0.00      0.00      0.00        12
+I-CMTY_QUANT       0.55      0.38      0.44        16
+      I-DATE       0.57      0.89      0.69       139
+       I-DOC       0.00      0.00      0.00        42
+   I-ETH_REL       0.00      0.00      0.00         0
+   I-LOC_ADJ       0.00      0.00      0.00         0
+  I-LOC_NAME       0.14      0.19      0.16        16
+      I-None       0.00      0.00      0.00         0
+       I-ORG       0.92      0.78      0.84       166
+  I-PER_ATTR       0.00      0.00      0.00         0
+  I-PER_NAME       0.86      0.71      0.78       391
+       I-PRF       0.97      0.50      0.66       258
+      I-SHIP       0.50      0.01      0.01       154
+ I-SHIP_TYPE       0.00      0.00      0.00        10
+    I-STATUS       0.00      0.00      0.00         0
+           O       0.98      0.97      0.97     18918
+
+    accuracy                           0.93     21947
+   macro avg       0.40      0.41      0.39     21947
+weighted avg       0.94      0.93      0.93     21947
+
+-------------------------------------------------
+Classification Report for Fold 15
+Classification Report for File: NL-HaNA_1.04.02_1160_0013-0026 - 1647 - Originele generale missive in dato 15 Januarij 1647
+              precision    recall  f1-score   support
+
+ B-CMTY_NAME       0.87      0.71      0.78       205
+ B-CMTY_QUAL       1.00      0.40      0.57         5
+B-CMTY_QUANT       0.66      0.59      0.62        82
+      B-DATE       0.78      0.80      0.79       100
+       B-DOC       0.53      0.59      0.56        76
+   B-ETH_REL       0.67      0.20      0.31        10
+   B-LOC_ADJ       0.95      0.75      0.84        97
+  B-LOC_NAME       0.84      0.97      0.90       312
+      B-None       0.00      0.00      0.00         0
+       B-ORG       0.61      0.79      0.69        28
+  B-PER_ATTR       0.46      0.82      0.59        45
+  B-PER_NAME       0.77      0.82      0.80       250
+       B-PRF       0.87      0.64      0.74       169
+      B-SHIP       0.93      0.88      0.91       163
+ B-SHIP_TYPE       0.77      0.99      0.87       101
+    B-STATUS       0.00      0.00      0.00         0
+ I-CMTY_NAME       0.00      0.00      0.00         0
+ I-CMTY_QUAL       0.00      0.00      0.00         0
+I-CMTY_QUANT       1.00      0.59      0.75       158
+      I-DATE       0.83      0.97      0.90       181
+       I-DOC       0.00      0.00      0.00        32
+   I-ETH_REL       1.00      1.00      1.00         2
+   I-LOC_ADJ       0.00      0.00      0.00         0
+  I-LOC_NAME       1.00      0.60      0.75        45
+      I-None       0.00      0.00      0.00         0
+       I-ORG       0.85      0.97      0.91        36
+  I-PER_ATTR       0.00      0.00      0.00         0
+  I-PER_NAME       0.97      0.63      0.77       155
+       I-PRF       0.00      0.00      0.00        28
+      I-SHIP       1.00      1.00      1.00        12
+ I-SHIP_TYPE       1.00      1.00      1.00        17
+    I-STATUS       0.00      0.00      0.00         0
+           O       0.98      0.98      0.98     13944
+
+    accuracy                           0.95     16253
+   macro avg       0.59      0.54      0.55     16253
+weighted avg       0.95      0.95      0.95     16253
+
+-------------------------------------------------
+Classification Report for Fold 16
+Classification Report for File: NL-HaNA_1.04.02_3476_0517-0534 - 1777 - Dagelijksche aantekening gehouden op de heen en terugreijde zoo meede verblijf aan het Bantamsche..
+              precision    recall  f1-score   support
+
+ B-CMTY_NAME       0.85      0.69      0.76       113
+ B-CMTY_QUAL       0.92      1.00      0.96        12
+B-CMTY_QUANT       0.58      0.58      0.58        19
+      B-DATE       0.57      0.40      0.47        10
+       B-DOC       0.92      0.96      0.94        23
+   B-ETH_REL       1.00      0.50      0.67         6
+   B-LOC_ADJ       0.90      1.00      0.95        43
+  B-LOC_NAME       0.62      0.72      0.67        57
+      B-None       0.00      0.00      0.00         0
+       B-ORG       1.00      0.06      0.12        31
+  B-PER_ATTR       0.97      0.55      0.71       141
+  B-PER_NAME       0.94      0.86      0.90       155
+       B-PRF       0.86      0.90      0.88       375
+      B-SHIP       0.55      0.47      0.50        75
+ B-SHIP_TYPE       0.72      0.84      0.77        79
+    B-STATUS       0.00      0.00      0.00        53
+ I-CMTY_NAME       0.00      0.00      0.00         0
+ I-CMTY_QUAL       0.00      0.00      0.00         0
+I-CMTY_QUANT       1.00      0.33      0.50         6
+      I-DATE       0.67      0.84      0.74        19
+       I-DOC       0.00      0.00      0.00         0
+   I-ETH_REL       0.00      0.00      0.00         0
+   I-LOC_ADJ       0.00      0.00      0.00         0
+  I-LOC_NAME       0.40      0.11      0.17        19
+      I-None       0.00      0.00      0.00         0
+       I-ORG       0.00      0.00      0.00         1
+  I-PER_ATTR       0.00      0.00      0.00         0
+  I-PER_NAME       0.97      0.97      0.97       143
+       I-PRF       1.00      0.53      0.70        92
+      I-SHIP       0.20      0.07      0.10        15
+ I-SHIP_TYPE       0.00      0.00      0.00         0
+    I-STATUS       0.00      0.00      0.00         0
+           O       0.96      0.99      0.98      6140
+
+    accuracy                           0.94      7627
+   macro avg       0.50      0.41      0.42      7627
+weighted avg       0.93      0.94      0.93      7627
+
+-------------------------------------------------
