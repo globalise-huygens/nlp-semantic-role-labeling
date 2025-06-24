@@ -20,7 +20,7 @@ learningrates=(5e-5)
 epochs=(30)
 batch_sizes=(16)
 modelnames=('globalise/GloBERTise') #'FacebookAI/xlm-roberta-base'  #'google-bert/bert-base-multilingual-cased'
-model_types=('RoBERTa') #XLM #BERT
+model_types=('RoBERTa') #XLM-R #BERT
 
 
 DEST="/gpfs/home2/hgoossens/Documents/NERC/gloBERT/" #where to save results on Snellius
