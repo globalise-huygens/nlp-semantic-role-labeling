@@ -124,7 +124,7 @@ for index in docs:
         tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
     elif model_type == 'RoBERTa':
         tokenizer = RobertaTokenizerFast.from_pretrained(model_checkpoint, add_prefix_space=True)
-    elif model_type == 'XLM':
+    elif model_type == 'XLM-R':
         tokenizer = XLMRobertaTokenizerFast.from_pretrained(model_checkpoint, add_prefix_space=True)
     special_tokens = {'additional_special_tokens': ['[PRED]']}
     tokenizer.add_special_tokens(special_tokens)
