@@ -38,21 +38,21 @@ do
                 do
                     for directory in "${data_directory[@]}"
                     do
-                python fine_tune_SRL.py --learning_rate=$learningrate \
-                                        --epoch=$epoch \
-                                        --batch_size=$batch_size \
-                                        --model_checkpoint=$modelname \
-                                        --model_type=$model_type \
-                                        --directory=$directory
-
-                cp $TMPDIR/outputs/*.json "$DEST" 2>/dev/null
-                cp $TMPDIR/outputs/*.csv "$DEST" 2>/dev/null
-                cp $TMPDIR/outputs/*.txt "$DEST" 2>/dev/null
-                cp $TMPDIR/outputs/*.png "$DEST" 2>/dev/null 
-
-                # Checkpoint (already limited to one)
-                cp -r $TMPDIR/outputs/checkpoint-* "$DEST" 2>/dev/null
-
+                    python fine_tune_SRL.py --learning_rate=$learningrate \
+                                            --epoch=$epoch \
+                                            --batch_size=$batch_size \
+                                            --model_checkpoint=$modelname \
+                                            --model_type=$model_type \
+                                            --directory=$directory
+    
+                    cp $TMPDIR/outputs/*.json "$DEST" 2>/dev/null
+                    cp $TMPDIR/outputs/*.csv "$DEST" 2>/dev/null
+                    cp $TMPDIR/outputs/*.txt "$DEST" 2>/dev/null
+                    cp $TMPDIR/outputs/*.png "$DEST" 2>/dev/null 
+    
+                    # Checkpoint (already limited to one)
+                    cp -r $TMPDIR/outputs/checkpoint-* "$DEST" 2>/dev/null
+                    done
                 done
             done
         done
