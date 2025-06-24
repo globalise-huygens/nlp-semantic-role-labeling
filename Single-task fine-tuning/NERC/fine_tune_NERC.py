@@ -53,7 +53,6 @@ def list_of_files(directory):
     return file_paths
 
 file_paths = list_of_files(directory)
-print(file_paths)
 
 # Load mappings
 with open('label_mapping_NER.json', 'r', encoding='utf-8') as f:
