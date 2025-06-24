@@ -54,7 +54,7 @@ def list_of_files(directory):
     return file_paths
 
 file_paths = list_of_files(directory)
-print(file_paths)
+
 #load mapping
 with open('label_mapping.json', 'r', encoding='utf-8') as f:
         label_mapping = json.load(f)
@@ -63,28 +63,11 @@ with open('label_mapping.json', 'r', encoding='utf-8') as f:
 label_list = []
 for label in label_mapping.keys():
     label_list.append(label)
-print(label_list)
 
 task = "semantic-role-labeling"
 SEED = 222
 
-
-#The DataCollatorForTokenClassification handles dynamic padding of input sequences during training.
-#It ensures that all sequences in a batch are padded to the longest sequence length, maintaining consistency while keeping memory usage optimized.
-
-
-#files_dict = process_file_to_dict(file_paths, label_mapping)
-
-#augmented_inputs = augment_sent_with_pred(files_dict, tokenizer)
-#dataset_files = Dataset.from_list(augmented_inputs)
-#dataset_files = dataset_files.select(range(subsetsize))
-#print(dataset_files)
-
-
-# We use the predefined metric from seqeval to calculate the model's performance metric = load("seqeval") 
-
 metric = load("seqeval")
-#metric = evaluate.load("./seqeval/seqeval.py")
 
 def compute_metrics(p):
     """
@@ -126,10 +109,6 @@ def compute_metrics(p):
         "f1": results["overall_f1"],                # F1 score (harmonic mean of precision and recall)
         "accuracy": results["overall_accuracy"],    # Accuracy metric
     }
-
-# Generate stratify labels for all sequences
-#stratified KFold
-#KFold
 
 all_f1_scores = []
 all_precision_scores = []
@@ -176,13 +155,6 @@ for index in docs:
     dataset_test = dataset_test.remove_columns(existing_columns)
     dataset_test.set_format(type="torch", columns=["input_ids", "attention_mask", "labels"])
 
-    #dataset_files = dataset_files.select(range(subsetsize))
-    #print(dataset_files)
-
-    #stratified: 
-    #folds = StratifiedKFold(n_splits=num_folds, shuffle=True, random_state = 42)
-    #for fold, (train_index, test_index) in enumerate(folds.split(dataset, stratify_labels)):
-    #print(f"\nFold {fold + 1} Training and Evaluation:")
     #initialize model
 
     model_name = model_checkpoint.split("/")[-1]
@@ -200,22 +172,16 @@ for index in docs:
         seed=SEED,
         report_to=None,
     )
-    # Split dataset into training and validation sets for the fold
-    #train_data = dataset.select(train_index)
-    #test_data = dataset.select(test_index)
+
     #initilize model trainer 
     trainer = Trainer(
-        model, # BERT model
-        args, #training arguments that define training parameters like learning rate, batch size as specified above
-        train_dataset=dataset_train,   # dataset used for training
-        eval_dataset=dataset_test, #dataset used for evaluating the model during training
-        #Data collator to batch and preprocess the data (handles padding, tokenization, etc.)
+        model,
+        args, 
+        train_dataset=dataset_train,   
+        eval_dataset=dataset_test,
         data_collator=data_collator, 
-        #tokenizer as initiated in the beginning
         tokenizer=tokenizer,
-        #function to compute evaluation metrics (precision, recall, f1-score)
-        compute_metrics=compute_metrics #evaluation metrics based on model's predictions
-
+        compute_metrics=compute_metrics 
         )
 
     trainer.train()
@@ -225,8 +191,6 @@ for index in docs:
         logs= dict(log)
         logs['fold'] = fold + 1
         all_metrics.append(logs)
-
-    #test_dicts = raw_dataset_test.to_list()
 
     predictions, labels, metrics = trainer.predict(dataset_test)
     predictions = np.argmax(predictions, axis=2)
@@ -280,9 +244,6 @@ for index in docs:
 metrics_file = os.path.join(base_output_dir, "all_metrics_complete.json")
 run_result = {'learning_rate': learning_rate, 'epochs': epoch, 'model_checkpoint': model_checkpoint, 'batch_size':batch_size,
             'metrics': {'precision': all_precision_scores, 'recall': all_recall_scores, 'f1': all_f1_scores, 'accuracy': all_accuracy_scores, 'per_class_scores': all_classes, 'loss': all_loss_scores, 'epoch_logs': all_metrics}}
-
-#with open('agg_metrics_test.json', 'a') as f:
-#json.dump(data_scores, f)
 
 if os.path.exists(metrics_file):
     with open(metrics_file, 'r') as f: 
