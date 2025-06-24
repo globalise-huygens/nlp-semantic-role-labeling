@@ -81,14 +81,11 @@ def compute_metrics(p):
     Returns:
         dict: A dictionary containing the evaluation metrics (precision, recall, F1, accuracy).
     """
-    predictions, labels = p  # Unpack the tuple 'p' into predictions and labels
+    predictions, labels = p 
 
-    # Convert the model's predictions (raw probabilities) to the predicted class labels
-    # np.argmax(predictions, axis=2) gives the index of the highest probability for each token (token classification task)
     predictions = np.argmax(predictions, axis=2)
 
     # Remove ignored index (special tokens) (like padding tokens, denoted by -100)
-    # We filter out predictions and labels where the label is -100 (special token, padding)
     true_predictions = [
         [label_list[p] for (p, l) in zip(prediction, label) if l != -100]  # Use the label list to map predicted indices to labels
         for prediction, label in zip(predictions, labels)  # Iterate through each batch (prediction, label pair)
@@ -98,8 +95,6 @@ def compute_metrics(p):
         for prediction, label in zip(predictions, labels)  # Iterate through each batch (prediction, label pair)
     ]
 
-    # Compute the evaluation metrics using the seqeval library
-    # This calculates precision, recall, F1-score, and accuracy based on the filtered predictions and true labels
     results = metric.compute(predictions=true_predictions, references=true_labels)
 
     # Return the computed metrics in a dictionary
