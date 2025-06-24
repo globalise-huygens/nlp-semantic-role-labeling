@@ -36,7 +36,7 @@ do
             do
                 for model_type in "${model_types}"
                 do
-                    for directory in "${data_directory}"
+                    for directory in "${data_directory[@]}"
                     do
                     python MTL.py --learning_rate=$learningrate \
                                             --epoch=$epoch \
