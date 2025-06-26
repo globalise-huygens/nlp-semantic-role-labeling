@@ -15,15 +15,17 @@ srl_classification_reports.txt – Classification reports for every SRL fold.
 ## Other output
 > The code provided in this repository also creates files per fold that show per token the prediction and the gold label per task. These files are not included here due to space constraints: each model-setup combination produces 16 such files (one per fold), quickly adding up in size.
 Each of these files has the following structure:
+
+```text
 # Fold 3
 Token         Gold        Pred       Task
 ----------------------------------------------
 het           O           O          SRL
 schip         B-AGENT     B-AGENT    SRL
 vertrok       O           O          SRL
-......
+...
 het           O           O          NER
 schip         SHIP_TYPE   O          NER
 vertrok       O           O          NER
 ...
-
+```
