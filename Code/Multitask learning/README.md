@@ -24,8 +24,8 @@ python MT1.py \
     --learning_rate 5e-5 \
     --epoch 30 \
     --batch_size 16 \
-    --model_checkpoint "xlm-roberta-base" \
-    --model_type "XLM-R"
+    --model_checkpoint 'globalise/GloBERTise' \
+    --model_type "RoBERTa"
 ```
 
 To run it on a SLURM cluster:
