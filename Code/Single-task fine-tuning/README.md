@@ -1,6 +1,6 @@
 # Fine-tuning SRL Models on VOC Data
 
-> This repository contains scripts for fine-tuning transformer models on Semantic Role Labeling (SRL) and Named Entity Recogntion and Classification tasks using annotated `.conllu` files. The data is also listed in this repository and is preprocessed for token classification.
+> This repository contains scripts for fine-tuning transformer models on Semantic Role Labeling (SRL) and Named Entity Recogntion and Classification tasks using annotated `.conllu` files. The data is also listed in this repository and is preprocessed for token classification. 
 
 ## Contents
 
@@ -22,7 +22,7 @@ SRL:
 | `label_mapping.json` | JSON dictionary mapping SRL labels to numeric IDs. |
 | `script.sh` | Slurm batch script for launching training jobs on a GPU cluster. |
 
-
+Each following description takes the SRL files as reference point, but everything is the same for the NERC files except the file namesa as described above, and ofcourse the output is based on the task of NERC.
 
 ---
 
@@ -36,16 +36,7 @@ Place your `.conllu` training files in a folder named `../Data/SRL_train_with_en
 - Column 8 = NE label (e.g. 'B-person_name, 'O', etc.)
 
 ### 2. Run training locally
-NERC: 
-```bash
-python fine_tune_NERC.py \
-  --learning_rate 5e-5 \
-  --epoch 30 \
-  --batch_size 16 \
-  --model_checkpoint globalise/GloBERTise \
-  --model_type RoBERTa
-```
-SRL:
+
 ```bash
 python fine_tune_SRL.py \
   --learning_rate 5e-5 \
@@ -56,11 +47,7 @@ python fine_tune_SRL.py \
 ```
 
 ### 3. Run on a cluster (Slurm)
-NERC:
-```bash
-sbatch script_NER.sh
-```
-SRL:
+
 ```bash
 sbatch script.sh
 ```
@@ -68,8 +55,6 @@ sbatch script.sh
 ---
 
 ## Code Summary
-
-Each description is the same for the NERC files, except the file names.
 
 ### `fine_tune_SRL.py` 
 - Implements **leave-one-document-out cross-validation**.
@@ -90,7 +75,7 @@ Includes reusable methods for:
 - Saving confusion matrices and long-format CSVs
 - Computing macro scores and per-class metrics
 
-### `label_mapping`
+### `label_mapping.json`
 A JSON file mapping label strings (e.g. `"B-Agent"`) to numeric class IDs and vice versa. Used for:
 - Label encoding
 - Mapping predictions back to string labels during output
@@ -117,7 +102,7 @@ Batch script for HPC clusters:
 
 ---
 
-## 📝 Notes
+## Notes
 - Uses `seqeval` to compute entity-level metrics.
 - Tokenizer automatically adds `[PRED]` as special token.
 - `Trainer` is configured to evaluate every epoch.
