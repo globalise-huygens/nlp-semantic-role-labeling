@@ -88,7 +88,7 @@ Each sub‑folder includes a dedicated `README.md` with usage instructions.
 
 ## Results
 
-All evaluation artefacts live in `Results/`, organised first by **framework** (MTL / SRL / NERC) and then by **model** (GloBERTise, XLM‑R, mBERT). Sub‑folder READMEs explain the CSV, JSON and TXT files provided.
+All evaluation artefacts live in `Results/`, organised first by **framework** (MTL / Single-task (NERC and SRL)) and then by **model** (GloBERTise, XLM‑R, mBERT). Sub‑folder READMEs explain the CSV, JSON and TXT files provided.
 
 ---
 
