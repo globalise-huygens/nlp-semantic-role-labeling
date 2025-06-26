@@ -10,6 +10,13 @@ This repository accompanies the master's‑thesis project *Multitask Learning of
 
 The thesis investigates whether a Multitask‑Learning (MTL) setup that jointly trains **Semantic Role Labeling (SRL)** and **Named Entity Recognition & Classification (NERC)** can outperform single‑task fine‑tuning on SRL alone when training data are scarce. Three transformer models are evaluated: multilingual BERT, XLM‑RoBERTa, and **GloBERTise** (a domain‑specific Dutch RoBERTa). Sixteen annotated Early‑Modern‑Dutch VOC documents are used in cross‑validation. The methodology, results, and extensive error analysis are described in the thesis report.
 
+This repository belongs to the Master's thesis Project 'Multitask Learning of Semantic Role Labeling and Named Entity Recognition for domain-specific documents from the Dutch East-India Company archives' by Hannah Goossens, supervised by Stella Verkijk and Piek Vossen. The project was part of the GLOBALISE research project, which aims to build a search engine for the Dutch East-India Company (VOC) archives. *
+
+The thesis investigated the effect of Multitask Learning (MTL) on Semantic Role Labeling (SRL) using annotated documents from the Dutch East-India Company (VOC) archives, written in Early Modern Dutch. Several Transformer-based models were evaluated to determine whether an MTL framework, jointly training for SRL and Named Entity Recognition and Classification (NERC), improves SRL performance compared to single-task finetuning for SRL. The MTL approach was chosen based on the limited availability of labeled data, as MTL can allow the sharing of parameters across tasks, which could reduce the need for vast amounts of labeled data. The models that were implemented are multilingual BERT, XLM-RoBERTa, and GloBERTise: a domain-specific pre-trained RoBERTa model. The models were trained and tested using cross-validation of the 16 annotated documents. An evaluation of the results of SRL was carried out for each model, comparing both the different models in the single-task finetuning for SRL and NERC and multitask learning of SRL and NERC, as well as the same models in the different implementations (single-task vs. multitask) for SRL. An extensive error analysis was reported on for best performing model, based on SRL performance.
+
+The complete background, data description, methodology, results, error analysis and discussion can be found in the thesis report, which is listed below.
+
+
 ---
 
 ## Project Structure
@@ -102,7 +109,7 @@ Python 3.10 + is recommended.**
 
 ## Thesis Report
 
-The full thesis (PDF) is available in the repository release or via **VU Amsterdam Scripties**.
+The full thesis report is listed in this repository.*
 
 ---
 
