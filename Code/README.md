@@ -1,3 +1,11 @@
+# Multitask Learning (MTL)
+
+> Files necesary for implementing MTL setup of Semantic Role Labeling (SRL) and Named Entity Recognition and Classification (NERC)
+
+# Single-task fine-tuning
+
+> Files necessary for implementing the seperate single-task fine-tuning of SRL and NERC
+
 # Data Distribution Utilities
 
 > Python module for analyzing and visualizing sentence, token, semantic role, and named entity distributions in the VOC data files as listed in the Data folder.
