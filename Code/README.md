@@ -84,8 +84,6 @@ Plots are produced with `matplotlib`. All figure windows are displayed immediate
 
 # Error_analysis.py
 
-# SRL Error Analysis Utilities
-
 > Python helper for categorizing and summarizing prediction errors in **Semantic Role Labeling (SRL)** experiments. Feed it a token‑level DataFrame of gold and predicted labels, and the script will label every token with a fine‑grained error type, output concise summary statistics, and write detailed CSVs for further inspection.
 
 ## Features
