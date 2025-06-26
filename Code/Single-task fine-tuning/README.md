@@ -26,16 +26,7 @@ Each following description takes the SRL files as reference point, but everythin
 
 ---
 
-## Quick Start
-
-### 1. Prepare your data
-Place your `.conllu` training files in a folder named `../Data/SRL_train_with_entities/`. These should follow a format where:
-- Column 5 = token  
-- Column 6 = predicate flag (`O` = no predicate)  
-- Column 7 = SRL label (e.g., `B-Agent`, `O`, etc.)
-- Column 8 = NE label (e.g. 'B-person_name, 'O', etc.)
-
-### 2. Run training locally
+### Run training locally
 
 ```bash
 python fine_tune_SRL.py \
@@ -46,7 +37,7 @@ python fine_tune_SRL.py \
   --model_type RoBERTa
 ```
 
-### 3. Run on a cluster (Slurm)
+### Run on a cluster (Slurm)
 
 ```bash
 sbatch script.sh
