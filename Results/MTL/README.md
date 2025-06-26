@@ -1,5 +1,5 @@
 # Multitask Learning results
-> This folder contains the results of the multitask learning framework for the three models implemented: GloBERTise, XLM-RoBERTa, and multilingual BERT. Each model's results consist of six files.
+> This folder contains the results of the multitask learning framework for the three models implemented: GloBERTise, XLM-RoBERTa, and multilingual BERT. Each model's results consist of five files.
 
 ## File Overview
 MT_all_metrics_complete.json – Consolidated run-level metrics (precision, recall, F1, accuracy) for each cross-validation fold and task, plus per-class scores. 
