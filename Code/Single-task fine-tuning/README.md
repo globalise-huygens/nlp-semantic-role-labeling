@@ -1,4 +1,4 @@
-# Fine-tuning SRL Models on VOC Data
+# Single-task fine-tuning of NERC and SRL
 
 > This repository contains scripts for fine-tuning transformer models on Semantic Role Labeling (SRL) and Named Entity Recogntion and Classification tasks using annotated `.conllu` files. The data is also listed in this repository and is preprocessed for token classification. 
 
