@@ -1,4 +1,4 @@
-# Multitask Learning of SRL & NER on VOC Data
+# Multitask Learning of SRL & NERC
 
 > This repository contains scripts for **multitask** fine‑tuning of transformer models on both Semantic Role Labeling (SRL) *and* Named‑Entity Recognition and Classification (NERC).  
 > The training data is provided in this repository and is in `.conllu` format.
