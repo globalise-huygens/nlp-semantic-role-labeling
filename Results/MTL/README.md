@@ -3,10 +3,26 @@
 
 ## File Overview
 MT_all_metrics_complete.json – Consolidated run-level metrics (precision, recall, F1, accuracy) for each cross-validation fold and task, plus per-class scores. 
+Structure overview:
+```text
+{
+  "learning_rate": 5e-05,
+  "epochs": 30,
+  "model_checkpoint": "globalise/GloBERTise",
+  "batch_size": 16,
+  "metrics": {
+    "precision": [{"srl": ..., "ner": ...},{....}],
+    "recall": [{"srl": ..., "ner": ...},{....}],
+    "f1": [{"srl": ..., "ner": ...},{....}],
+    "accuracy": [{"srl": ..., "ner": ...},{....}],
+    "per_class_scores": [...]
+  }
+}
+```
 
 NER_all_matrices.csv – Wide-format confusion matrices (one matrix per fold) covering all NER labels.
 
-SRL_all_matrices.csv – Wide-format confusion matrices for all SRL labels.
+SRL_all_matrices.csv – Wide-format confusion matrices (one matrix per fold) for all SRL labels.
 
 ner_classification_reports.txt – Classification reports for every NER fold. 
 
