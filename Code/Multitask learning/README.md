@@ -1,4 +1,4 @@
-# Multitask SRL & NER Fine-Tuning Scripts
+# Multitask Learning of SRL & NERC Scripts
 
 This folder contains the main scripts and utilities used to train multitask models for Semantic Role Labeling (SRL) and Named Entity Recognition (NER) on VOC data.
 
