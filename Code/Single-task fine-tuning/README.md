@@ -22,7 +22,7 @@ SRL:
 | `label_mapping.json` | JSON dictionary mapping SRL labels to numeric IDs. |
 | `script.sh` | Slurm batch script for launching training jobs on a GPU cluster. |
 
-Each following description takes the SRL files as reference point, but everything is the same for the NERC files except the file namesa as described above, and ofcourse the output is based on the task of NERC.
+Each following description takes the SRL files as reference point, but everything is the same for the NERC files except the file names as described above, and ofcourse the output is based on the task of NERC.
 
 ---
 
