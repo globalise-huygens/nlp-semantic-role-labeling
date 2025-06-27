@@ -23,6 +23,9 @@ from data_distribution import *
 # 1. Collect all .conllu paths inside ./corpus
 paths = list_of_files("./corpus")
 
+# 2. Build (and save) an SRL (or NERC) label-to-index mapping
+label_map = get_label_encoding(paths, task="SRL", filename="label_mapping.json")
+
 # 2. Compute document‑level statistics
 stats = document_statistics(paths)
 
@@ -39,6 +42,10 @@ barplot(role_mentions, xlabel="SRL Role", rotation=45)
 ## API Reference
 ### `list_of_files(directory) -> List[str]`
 Recursively returns absolute paths to every `.conllu` file located under `directory`.
+
+### 'get_label_encoding(file_paths, task='SRL', filename='label_mapping.json') -> Dict[str, int]'
+Extracts all SRL (column 6) or NERC (column 7) labels from the provided files, fits a LabelEncoder,
+saves the resulting label-to-index mapping to filename, and returns the mapping as a dictionary.
 
 ### `count_sents(path) -> int`
 Counts sentences (text regions) in a single file; sentences (text regions) are delimited by blank lines.
