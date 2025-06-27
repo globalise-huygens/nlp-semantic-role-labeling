@@ -2,7 +2,7 @@
 > This folder contains the results of the single-task fine-tuning framework for semantic role labeling (SRL) and named entity recognition and classification (NERC) for the three models implemented: GloBERTise, XLM-RoBERTa, and multilingual BERT. Each model's results consist of three files.
 
 ## File Overview
-all_metrics_complete.json – Consolidated run-level metrics (precision, recall, F1, accuracy) for each cross-validation fold and task, plus per-class scores. 
+all_metrics_complete.json – Combined fold-level metrics for each cross-validation fold and task, plus per-class scores. 
 Structure overview:
 ```text
 {
