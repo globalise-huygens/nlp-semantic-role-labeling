@@ -70,9 +70,3 @@ Batch script for GPU clusters:
 
 ---
 
-## Notes
-* Shared encoder is instantiated from BERT, RoBERTa, or XLM‑R; tokenizer is resized to add `[PRED]`.  
-* Custom `DataCollatorWithTaskName` injects the task identifier into each batch.  
-* `MultitaskTrainer` alternates batches proportionally between tasks.  
-* Evaluation runs **every epoch**, and best checkpoints are saved (limit 1 per fold).  
-* Metrics computed with `seqeval` and `sklearn`, ensuring comparability with single‑task runs.
