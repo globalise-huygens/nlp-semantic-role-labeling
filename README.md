@@ -88,7 +88,7 @@ Each sub‑folder includes a dedicated `README.md` with usage instructions.
 
 ## Results
 
-All evaluation artefacts live in `Results/`, organised first by **framework** (MTL / Single-task (NERC and SRL)) and then by **model** (GloBERTise, XLM‑R, mBERT). Sub‑folder READMEs explain the CSV, JSON and TXT files provided.
+The evaluation output are stored in `Results/`, organised first by **framework** (MTL / Single-task (NERC and SRL)) and then by **model** (GloBERTise, XLM‑R, mBERT). Sub‑folder READMEs explain the CSV, JSON and TXT files provided.
 
 ---
 
@@ -100,17 +100,20 @@ Install dependencies with:
 pip install -r requirements.txt
 ```
 
-Python 3.10 + is recommended.**
+Python 3.10 + is recommended.
 
 ---
 
 ## Thesis Report
 
-The full thesis report is listed in this repository.*
+The full thesis report is listed in this repository.
 
 ---
 
 ## References
 
+The data is taken from this repository: ....
+
+The multitask code is adapted from this article: ....
 
 
