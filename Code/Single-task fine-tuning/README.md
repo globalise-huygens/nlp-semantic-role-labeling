@@ -67,9 +67,8 @@ Includes reusable methods for:
 - Computing macro scores and per-class metrics
 
 ### `label_mapping.json`
-A JSON file mapping label strings (e.g. `"B-Agent"`) to numeric class IDs. Used for:
-- Label encoding
-- Mapping predictions back to string labels during output
+A JSON dictionary mapping label strings (e.g. `"B-Agent"`) to integer IDs and back.  
+Used for encoding labels and translating predictions to human‑readable form. The code to obtain this label_mapping is also provided in the data_distribution.py file.
 The code to obtain this label_mapping is also provided in the data_distribution.py file.
 
 ### `script.sh`
