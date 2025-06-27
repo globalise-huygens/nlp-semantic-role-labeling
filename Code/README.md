@@ -70,15 +70,11 @@ Constructs a DataFrame with detailed overlap metrics and saves it as TSV.
 ### `top_10_plot(df_counts, new_file)`
 Plots the ten role–NER pairs that have the highest overlap.
 
-
-## Visualizations
-Plots are produced with `matplotlib`. All figure windows are displayed immediately; save them using `plt.savefig()` if needed.
-
 ---
 
 # Error_analysis.py
 
-> Python helper for categorizing and summarizing prediction errors in **Semantic Role Labeling (SRL)** experiments. Feed it a token‑level DataFrame of gold and predicted labels, and the script will label every token with a fine‑grained error type, output concise summary statistics, and write detailed CSVs for further inspection.
+> Python helper for categorizing and summarizing prediction errors in **Semantic Role Labeling (SRL)** experiments. Feed it a token‑level DataFrame of gold and predicted labels, and the script will label every token with an error type, output summary statistics, and write detailed CSVs for further inspection.
 
 ## Features
 
@@ -131,6 +127,8 @@ Main pipeline:
 4. Builds counts/percentages for *False Positive, False Negative, Boundary Error, Label Confusion*.
 5. Saves summary and detailed CSVs, prints results.
 
+## Data expectation
+- Per fold token-level prediction vs. gold files as output from fine-tune code and described in results folder.
 ---
 
 # evaluation_metrics.py
