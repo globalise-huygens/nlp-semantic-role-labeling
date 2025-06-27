@@ -1,3 +1,6 @@
+# Overview
+
+These three files are used to visualize and analyze the data, perform a detailed error analysis, and evaluate the obtained metric scores.
 
 # Data_distribution.py
 
