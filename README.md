@@ -1,6 +1,6 @@
 # Multitask Learning of Semantic Role Labeling and Named Entity Recognition for domain‑specific documents from the Dutch East‑India Company archives
 
-## Master's Degree in 'Linguistics: Text‑Mining' (currently Language & AI), VU Amsterdam, 2024‑2025
+## Master's Degree in 'Linguistics: Language & AI (previously Text Mining)', VU Amsterdam, 2024‑2025
 
 ---
 
