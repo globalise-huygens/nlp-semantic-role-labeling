@@ -23,6 +23,59 @@ def list_of_files(directory):
             file_paths.append(path)
     return file_paths
 
+def get_label_encoding(file_paths, task = 'SRL', filename = 'label_mapping.json'):
+    """
+    Extracts labels (for SRL or NERC) from annotated files, fits a label encoder,
+    and saves the resulting label-to-index mapping to a JSON file.
+
+    Parameters
+    ----------
+    file_paths : list of str
+        List of paths to input files. Each file is expected to contain tab-separated 
+        token annotations with at least 7 or 8 columns, depending on the task.
+
+    task : str, optional
+        Task type for which labels should be extracted. 
+        Must be either 'SRL' (semantic role labeling, column 6) or 'NERC' 
+        (named entity recognition/classification, column 7). Default is 'SRL'.
+
+    filename : str, optional
+        Path to the JSON file where the label-to-index mapping will be saved.
+        Default is 'label_mapping.json'.
+
+    Returns
+    -------
+    None
+
+    """
+    labels = []
+    for file in file_paths:
+        with open(file, encoding = 'utf-8') as infile:
+            for line in infile:
+                if line != '\n':
+                    #remove the newline at the end of the line, then split the line based on the tab separator
+                    line_split = line.strip('\n').split('\t')
+                    if task == 'SRL':
+                        argument = line_split[6]
+                        labels.append(argument)
+                    elif task == 'NERC':
+                         argument = line_split[7]
+                         labels.append(argument)
+
+    encoder = LabelEncoder()
+
+    # Fit the encoder to the labels
+    encoder.fit(labels)
+
+    # The 'classes_' attribute contains the labels mapped to numbers
+    label_mapping = dict(zip(encoder.classes_, range(len(encoder.classes_))))
+    label_mapping = {str(key): value for key, value in label_mapping.items()}
+    
+    #save mapping
+    with open(filename, 'w', encoding='utf-8') as l:
+            json.dump(label_mapping, l)
+
+
 def count_sents(path):
     """
     Counts the number of sentences present in a file. Each sentence is constructed by adding the lines until an empty line is present (indication of end of sentence).
