@@ -10,7 +10,7 @@ This repository belongs to the Master's thesis Project 'Multitask Learning of Se
 
 The thesis investigated the effect of Multitask Learning (MTL) on Semantic Role Labeling (SRL) using annotated documents from the Dutch East-India Company (VOC) archives, written in Early-Modern Dutch. Several Transformer-based models were evaluated to determine whether an MTL framework, jointly training for SRL and Named Entity Recognition and Classification (NERC), improves SRL performance compared to single-task finetuning for SRL. The MTL approach was chosen based on the limited availability of labeled data, as MTL can allow the sharing of parameters across tasks, which could reduce the need for vast amounts of labeled data. The models that were implemented are multilingual BERT, XLM-RoBERTa, and GloBERTise: a domain-specific pre-trained RoBERTa model. The models were trained and tested using cross-validation of the 16 annotated documents. An evaluation of the results of SRL was carried out for each model, comparing both the different models in the single-task finetuning for SRL and NERC and multitask learning of SRL and NERC, as well as the same models in the different implementations (single-task vs. multitask) for SRL. An extensive error analysis was reported on for best performing model, based on SRL performance.
 
-The complete background, data description, methodology, results, error analysis and discussion can be found in the thesis report, which is listed below.
+The complete background, data description, methodology, results, error analysis and discussion can be found in the thesis report, which is listed in this repository.
 
 
 ---
