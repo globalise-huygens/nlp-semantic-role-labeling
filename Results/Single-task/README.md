@@ -50,3 +50,4 @@ vertrok       O           O
 or 
 ...
 ```
+> The code also outputs a confusion matrix per fold as a .png file and long-format confusion matrices of all folds, which were not used for further analysis in the end and therefore not added to this repository.
