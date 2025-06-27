@@ -16,7 +16,7 @@ These three files are used to visualize and analyze the data, perform a detailed
 - Generate top‑10 class-overlap bar chart.
 - Export all tables to tab‑separated values (TSV) files.
 
-## Quick Start
+## How to start
 ```python
 from data_distribution import *
 
@@ -39,7 +39,7 @@ role_mentions, ne_mentions = distribution(ner, roles, type="Mention")
 barplot(role_mentions, xlabel="SRL Role", rotation=45)
 ```
 
-## API Reference
+## Overview functions
 ### `list_of_files(directory) -> List[str]`
 Recursively returns absolute paths to every `.conllu` file located under `directory`.
 
@@ -103,7 +103,7 @@ Plots the ten role–NER pairs that have the highest overlap.
 - **Single‑task & multi‑task aware**: filter by `Task` column when needed.
 - **Fold support**: embed fold number in output filenames.
 
-## Quick Start
+## How to start
 
 ```python
 import pandas as pd
@@ -121,7 +121,7 @@ error_analysis(df, train_setup="multi-task", task="SRL", fold=3)
 
 After execution you will see console summaries and three CSVs in your working directory.
 
-## API Reference
+## Overview functions
 
 ### `categorize_error(gold: str, pred: str) -> str | None`
 
@@ -152,7 +152,7 @@ Main pipeline:
 - **Line-plot F1** to compare two models side-by-side.
 - **Paired *t*-test** to check statistical significance.
 
-## Quick Start
+## How to start
 ```python
 from metrics_calculation import *
 
@@ -174,15 +174,31 @@ plot_f1_comparison(f1, srl_f1)
 calculate_significance(f1, srl_f1)
 ```
 
-## API Reference
-| Function | Purpose |
-|----------|---------|
-| `create_combined_cm(path)` | Parse every “Confusion matrix for Fold X” block in a text file, sum them, save to `SRL_combined_confusion_matrix.csv`. |
-| `load_combined_matrix(csv_path)` | Load the saved CSV, row-normalise, and plot a Seaborn heatmap. |
-| `averages_multitask(json_path)` | Return + print fold-level precision/recall/F1 for **both** SRL and NER (multitask run). |
-| `averages(json_path)` | Return + print averages for a **single-task** run. |
-| `plot_f1_comparison(model_a, model_b)` | Line chart of F1 scores across folds. |
-| `calculate_significance(scores_a, scores_b)` | Paired *t*-test (prints mean ± std and *p*-value). |
+## Overview functions
+
+### ** `create_combined_cm(path)` **
+
+ Parse every “Confusion matrix for Fold X” block in a text file, sum them, save to `SRL_combined_confusion_matrix.csv`. 
+ 
+### **`load_combined_matrix(csv_path)` **
+
+Load the saved CSV, row-normalise, and plot a Seaborn heatmap. 
+### **`averages_multitask(json_path)` **
+
+Return + print fold-level precision/recall/F1 for **both** SRL and NER (multitask run). 
+
+### **`averages(json_path)` **
+Return + print averages for a **single-task** run. |
+
+### **`plot_f1_comparison(model_a, model_b)` **
+
+Line chart of F1 scores across folds. 
+
+### **`calculate_significance(scores_a, scores_b)` **
+
+Paired *t*-test (prints mean ± std and *p*-value). 
+
+--- 
 
 ## Data Expectations
 - all_metrics.json and all_metrices.csv files as provided by the fine-tune code and listed in the results folder
