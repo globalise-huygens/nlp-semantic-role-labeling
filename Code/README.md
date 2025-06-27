@@ -82,7 +82,7 @@ Plots are produced with `matplotlib`. All figure windows are displayed immediate
 
 ## Features
 
-- **Fine‑grained error taxonomy**
+- **Fine‑grained error type analysis**
   - *Correct* — prediction equals gold (and gold ≠ `O`).
   - *False Positive* — predicted label ≠ `O`, gold is `O`.
   - *False Negative* — gold label ≠ `O`, prediction is `O`.
@@ -143,11 +143,6 @@ Main pipeline:
 - **Average precision / recall / F1** across folds for single-task and multitask setups.
 - **Line-plot F1** to compare two models side-by-side.
 - **Paired *t*-test** to check statistical significance.
-
-## Installation
-```bash
-pip install pandas numpy matplotlib seaborn scipy
-```
 
 ## Quick Start
 ```python
