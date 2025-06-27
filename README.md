@@ -112,8 +112,8 @@ The full thesis report is listed in this repository.
 
 ## References
 
-The data is taken from this repository: ....
+The data is taken from [this repository](https://github.com/globalise-huygens/nlp-event-detection/tree/main/annotated_data_processing_for_training).
 
-The multitask code is adapted from this article: ....
+The multitask code is adapted from [this source](https://medium.com/@shahrukhx01/multi-task-learning-with-transformers-part-1-multi-prediction-heads-b7001cf014bf). 
 
 
