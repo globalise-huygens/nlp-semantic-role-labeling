@@ -7,15 +7,16 @@
 - Recursively gather all `.conllu` files inside a directory.
 - Compute sentence and token counts per document.
 - Extract and count non‑`O` semantic role (SRL) and named entity (NER) tags.
-- Aggregate corpus‑level statistics including yearly breakdowns derived from file names.
-- Convert BIO‑encoded tags into mention‑, token‑, or raw‑level representations.
-- Generate frequency bar plots and top‑10 horizontal bar charts.
+- Aggregate corpus‑level statistics per document based on file names (year).
+- Convert BIO‑encoded tags into mention‑, token‑, or raw‑level distribution.
 - Build detailed overlap tables showing how NER categories intersect with SRL arguments.
-- Export all tables to tab‑separated values (TSV) files for easy downstream analysis.
+- Generate top‑10 class-overlap bar chart.
+- Export all tables to tab‑separated values (TSV) files.
 
 ## Quick Start
 ```python
 from data_distribution import *
+
 # 1. Collect all .conllu paths inside ./corpus
 paths = list_of_files("./corpus")
 
@@ -37,10 +38,10 @@ barplot(role_mentions, xlabel="SRL Role", rotation=45)
 Recursively returns absolute paths to every `.conllu` file located under `directory`.
 
 ### `count_sents(path) -> int`
-Counts sentences in a single file; sentences are delimited by blank lines.
+Counts sentences (text regions) in a single file; sentences (text regions) are delimited by blank lines.
 
 ### `count_tokens(path) -> int`
-Counts tokens in a single file, respecting CoNLL‑U sentence boundaries.
+Counts tokens in a single file.
 
 ### `count_role_and_ne_tokens(file_paths) -> Tuple[List[str], List[str]]`
 Collects all SRL and NER BIO tags that are not `'O'`.
@@ -51,8 +52,8 @@ Returns sentence, token, SRL, and NER counts per document plus a year extracted 
 ### `distribution(ner, roles, type="Mention") -> Tuple[List[str], List[str]]`
 Normalises BIO tags. `type` can be:
 - `"Mention"` – keep only `B-` tags (distinct mentions).
-- `"Token"` – keep both `B-` & `I-` but strip prefix.
-- `"BIO"` – leave tags untouched.
+- `"Token"` – keep both `B-` & `I-` but strip prefix (for class distribution without bio tags).
+- `"BIO"` – leave tags untouched (for bio-tag class distribution).
 
 ### `barplot(items, xlabel="value", ylabel="count", rotation=0)`
 Simple frequency bar plot for any list of categorical items.
@@ -67,7 +68,7 @@ Prints overlap statistics.
 Constructs a DataFrame with detailed overlap metrics and saves it as TSV.
 
 ### `top_10_plot(df_counts, new_file)`
-Plots the ten role–NER pairs that occupy the highest share of their role.
+Plots the ten role–NER pairs that have the highest overlap.
 
 
 ## Visualizations
@@ -129,3 +130,58 @@ Main pipeline:
 3. Adds an **Error Type** column via `categorize_error()`.
 4. Builds counts/percentages for *False Positive, False Negative, Boundary Error, Label Confusion*.
 5. Saves summary and detailed CSVs, prints results.
+
+---
+
+# evaluation_metrics.py
+
+> Helper module that **aggregates confusion matrices, computes average SRL / NER scores, visualises F1-score trends, and runs significance tests** for the experiments.
+
+## Features
+- **Combine per-fold confusion matrices** (text output from your trainer) into a single CSV.
+- **Normalise & heat-map** the combined confusion matrix.
+- **Average precision / recall / F1** across folds for single-task and multitask setups.
+- **Line-plot F1** to compare two models side-by-side.
+- **Paired *t*-test** to check statistical significance.
+
+## Installation
+```bash
+pip install pandas numpy matplotlib seaborn scipy
+```
+
+## Quick Start
+```python
+from metrics_calculation import *
+
+# 1. Merge per-fold SRL confusion matrices
+create_combined_cm("logs/confusion_matrices.txt")
+
+# 2. Inspect the heatmap
+load_combined_matrix("SRL_combined_confusion_matrix.csv")
+
+# 3. Calculate averages
+precision, recall, f1 = averages("metrics/single_task.json")
+srl_p, srl_r, srl_f1, ner_p, ner_r, ner_f1 = averages_multitask("metrics/multitask.json")
+- which model results can be specified by path
+
+# 4. Visual F1 comparison
+plot_f1_comparison(f1, srl_f1)
+
+# 5. Significance test
+calculate_significance(f1, srl_f1)
+```
+
+## API Reference
+| Function | Purpose |
+|----------|---------|
+| `create_combined_cm(path)` | Parse every “Confusion matrix for Fold X” block in a text file, sum them, save to `SRL_combined_confusion_matrix.csv`. |
+| `load_combined_matrix(csv_path)` | Load the saved CSV, row-normalise, and plot a Seaborn heatmap. |
+| `averages_multitask(json_path)` | Return + print fold-level precision/recall/F1 for **both** SRL and NER (multitask run). |
+| `averages(json_path)` | Return + print averages for a **single-task** run. |
+| `plot_f1_comparison(model_a, model_b)` | Line chart of F1 scores across folds. |
+| `calculate_significance(scores_a, scores_b)` | Paired *t*-test (prints mean ± std and *p*-value). |
+
+## Data Expectations
+- all_metrics.json and all_metrices.csv files as provided by the fine-tune code and listed in the results folder
+
+
