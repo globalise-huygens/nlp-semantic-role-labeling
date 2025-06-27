@@ -45,3 +45,5 @@ schip         SHIP_TYPE   O          NER
 vertrok       O           O          NER
 ...
 ```
+
+> The code also outputs a confusion matrix per fold and a long-format confusion matrix, which were not used for further analysis in the end and therefore not added to this repository.
