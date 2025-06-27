@@ -46,7 +46,7 @@ Reusable utilities for:
 
 ### `label_mapping` & `label_mapping_NER`
 Two JSON dictionaries mapping label strings (e.g. `"B-Agent"`, `"B-PER_NAME"`) to integer IDs and back.  
-Used for encoding labels and translating predictions to human‑readable form.
+Used for encoding labels and translating predictions to human‑readable form. The code to obtain this label_mapping is also provided in the data_distribution.py file.
 
 ### `script_MT.sh`
 Batch script for GPU clusters:
