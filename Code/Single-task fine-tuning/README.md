@@ -92,9 +92,3 @@ Batch script for HPC clusters:
 | `all_metrics_complete.json` | JSON with F1/Precision/Recall/Accuracy per fold |
 
 ---
-
-## Notes
-- Uses `seqeval` to compute entity-level metrics.
-- Tokenizer automatically adds `[PRED]` as special token.
-- `Trainer` is configured to evaluate every epoch.
-- Model supports BERT, RoBERTa, and XLM-R variants.
