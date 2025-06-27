@@ -46,4 +46,4 @@ vertrok       O           O          NER
 ...
 ```
 
-> The code also outputs a confusion matrix per fold and a long-format confusion matrix, which were not used for further analysis in the end and therefore not added to this repository.
+> The code also outputs a confusion matrix per fold as a .png file and long-format confusion matrices of all folds, which were not used for further analysis in the end and therefore not added to this repository.
